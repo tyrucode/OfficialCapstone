@@ -31,7 +31,8 @@ function RootLayout() {
                 <nav>
                     <h1>Guessify!</h1>
                     <NavLink to='/'>Home<HomeIcon /></NavLink>
-
+                    <NavLink to='fake'>Fake</NavLink>
+                    <NavLink to='game'>Play</NavLink>
                     {!user ? (
                         <a href="#" onClick={handleSpotifyLogin}>Sign In!<LockSharpIcon /></a>
                     ) : (
@@ -50,8 +51,8 @@ function RootLayout() {
                                         src={user.images[0].url}
                                         alt={user.display_name}
                                         style={{
-                                            width: '32px',
-                                            height: '32px',
+                                            width: '45px',
+                                            height: '45px',
                                             borderRadius: '50%',
                                             border: '2px solid #1db954'
                                         }}
@@ -67,11 +68,9 @@ function RootLayout() {
                                     position: 'absolute',
                                     right: '0',
                                     top: '40px',
-                                    backgroundColor: '#212121',
-                                    border: '2px solid #1db954',
                                     borderRadius: '4px',
                                     padding: '8px',
-                                    zIndex: 100
+                                    zIndex: 100,
                                 }}>
                                     <a
                                         href="#"
@@ -89,8 +88,6 @@ function RootLayout() {
                             )}
                         </div>
                     )}
-
-                    <NavLink to='game'>Play</NavLink>
                 </nav>
             </header>
             <main>
@@ -101,7 +98,7 @@ function RootLayout() {
             <footer>
                 <p>Note: This app <strong>isnt</strong> an official Spotify App. Contact me for any questions. Links: <a href="https://github.com/tyrucode">Github</a> <a href="https://www.linkedin.com/in/tyler-ruiz-84a287305/">Linkedin</a></p>
             </footer>
-        </div>
+        </div >
     )
 }
 
