@@ -3,8 +3,8 @@ const CLIENT_ID = '619cbfa18fd846088bc95b31a67816b2';
 
 // Your redirect URI - use the one that's actually working
 const REDIRECT_URI = window.location.hostname === 'localhost'
-    ? 'http://localhost:5173/signin'
-    : 'https://official-capstone.vercel.app/signin'
+    ? 'http://localhost:5173/callback'
+    : 'https://official-capstone.vercel.app/callback'
 
 // The permissions we're requesting from the user
 const SCOPES = [

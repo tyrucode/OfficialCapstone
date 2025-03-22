@@ -15,7 +15,6 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="game" element={<GamePage />} />
       <Route path="callback" element={<SpotifyCallback />} />
-      <Route path="signin" element={<SpotifyCallback />} />
     </Route>
   )
 )
