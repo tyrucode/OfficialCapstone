@@ -18,7 +18,7 @@ function Home() {
                 </div>
                 <div className='indiv-steps'>Step 3:
                     Try to guess the song based on a snippet in under three guesses
-
+                    <h1>FUCKKKK YOUU</h1>
                 </div>
 
             </div>
