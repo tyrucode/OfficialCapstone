@@ -1,17 +1,95 @@
-//react router imports
-import { NavLink, Outlet } from "react-router"
-//other imports
+import { NavLink, Outlet } from "react-router-dom"
 import HomeIcon from '@mui/icons-material/Home';
 import LockSharpIcon from '@mui/icons-material/LockSharp';
+import PersonIcon from '@mui/icons-material/Person';
+import { redirectToSpotifyLogin } from "../services/spotifyAuth";
+import { useUser } from "../context/UserContext";
+import { useState } from "react";
 
 function RootLayout() {
+    const { user, logout } = useUser();
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const handleSpotifyLogin = (e) => {
+        e.preventDefault();
+        redirectToSpotifyLogin();
+    }
+
+    const toggleDropdown = () => {
+        setShowDropdown(!showDropdown);
+    }
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        logout();
+        setShowDropdown(false);
+    }
+
     return (
         <div className="rootLayout">
             <header>
                 <nav>
                     <h1>Guessify!</h1>
                     <NavLink to='/'>Home<HomeIcon /></NavLink>
-                    <NavLink>Sign In!<LockSharpIcon /></NavLink>
+
+                    {!user ? (
+                        <a href="#" onClick={handleSpotifyLogin}>Sign In!<LockSharpIcon /></a>
+                    ) : (
+                        <div style={{ position: 'relative' }}>
+                            <div
+                                onClick={toggleDropdown}
+                                style={{
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+                                {user.images && user.images.length > 0 ? (
+                                    <img
+                                        src={user.images[0].url}
+                                        alt={user.display_name}
+                                        style={{
+                                            width: '32px',
+                                            height: '32px',
+                                            borderRadius: '50%',
+                                            border: '2px solid #1db954'
+                                        }}
+                                    />
+                                ) : (
+                                    <PersonIcon style={{ color: '#1db954' }} />
+                                )}
+                                <span>{user.display_name}</span>
+                            </div>
+
+                            {showDropdown && (
+                                <div style={{
+                                    position: 'absolute',
+                                    right: '0',
+                                    top: '40px',
+                                    backgroundColor: '#212121',
+                                    border: '2px solid #1db954',
+                                    borderRadius: '4px',
+                                    padding: '8px',
+                                    zIndex: 100
+                                }}>
+                                    <a
+                                        href="#"
+                                        onClick={handleLogout}
+                                        style={{
+                                            display: 'block',
+                                            padding: '8px 16px',
+                                            textDecoration: 'none',
+                                            color: 'white'
+                                        }}
+                                    >
+                                        Sign Out
+                                    </a>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     <NavLink to='game'>Play</NavLink>
                 </nav>
             </header>
@@ -23,7 +101,7 @@ function RootLayout() {
             <footer>
                 <p>Note: This app <strong>isnt</strong> an official Spotify App. Contact me for any questions. Links: <a href="https://github.com/tyrucode">Github</a> <a href="https://www.linkedin.com/in/tyler-ruiz-84a287305/">Linkedin</a></p>
             </footer>
-        </div >
+        </div>
     )
 }
 
