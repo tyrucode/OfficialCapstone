@@ -6,7 +6,7 @@ import SpotifyCallback from "./src/pages/SpotifyCallback"
 // layouts
 import RootLayout from "./src/layouts/RootLayout"
 // context
-import { UserProvider } from "./context/UserContext";
+import { UserProvider } from "./src/context/UserContext";
 
 // routes for all pages
 const router = createBrowserRouter(
