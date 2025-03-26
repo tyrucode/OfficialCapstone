@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Game() {
+    //logic to see if a user is logged in
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ function Game() {
             {isAuthenticated ? (
                 <>
                     <h2>To start, choose a playlist!</h2>
+                    {/* most likely will be a component kinda thing */}
                     {/* Playlist selection and game content will go here */}
                 </>
             ) : (

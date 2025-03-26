@@ -9,16 +9,16 @@ import { useState } from "react";
 function RootLayout() {
     const { user, logout } = useUser();
     const [showDropdown, setShowDropdown] = useState(false);
-
+    //spotify login button
     const handleSpotifyLogin = (e) => {
         e.preventDefault();
         redirectToSpotifyLogin();
     }
-
+    //login/logout dropdown state
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
     }
-
+    //logout state
     const handleLogout = (e) => {
         e.preventDefault();
         logout();
@@ -31,7 +31,6 @@ function RootLayout() {
                 <nav>
                     <h1>Guessify!</h1>
                     <NavLink to='/'>Home<HomeIcon /></NavLink>
-                    <NavLink to='fake'>Fake</NavLink>
                     <NavLink to='game'>Play</NavLink>
                     {!user ? (
                         <a href="#" onClick={handleSpotifyLogin}>Sign In!<LockSharpIcon /></a>

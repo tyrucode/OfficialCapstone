@@ -3,7 +3,6 @@ import { RouterProvider, Route, createBrowserRouter, createRoutesFromElements } 
 import Home from "./src/pages/Home"
 import GamePage from "./src/pages/GamePage"
 import SpotifyCallback from "./src/pages/SpotifyCallback"
-import Faketestingpage from './src/pages/Faketestingpage'
 // layouts
 import RootLayout from "./src/layouts/RootLayout"
 // context
@@ -16,7 +15,6 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="game" element={<GamePage />} />
       <Route path="callback" element={<SpotifyCallback />} />
-      <Route path='fake' element={<Faketestingpage />} />
     </Route>
   )
 )

@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { getUserProfile } from '../services/spotifyApi';
 import { useUser } from '../context/UserContext';
 
+//this will talk to spotify essentially and allow us to sign in
 function SpotifyCallback() {
     const navigate = useNavigate();
     const { setUser } = useUser();
+    //error handling state
     const [debugInfo, setDebugInfo] = useState({
         url: '',
         hash: '',
@@ -14,20 +16,23 @@ function SpotifyCallback() {
     });
 
     useEffect(() => {
-        // For debugging purposes
+        //error handling state
         setDebugInfo({
             url: window.location.href,
             hash: window.location.hash,
             parsedHash: {},
             error: null
         });
-
+        //actual callback
         const handleCallback = async () => {
             try {
-                // Extract token info from the URL hash
+                //get token info from the hash
                 const hash = window.location.hash
+                    //crop it at the first index
                     .substring(1)
+                    //split at the symbol
                     .split('&')
+                    //reduce to what we need
                     .reduce((initial, item) => {
                         if (item) {
                             const parts = item.split('=');
@@ -36,84 +41,81 @@ function SpotifyCallback() {
                         return initial;
                     }, {});
 
-                // Update debug info
+                // updating the info for error handling
                 setDebugInfo(prev => ({
                     ...prev,
                     parsedHash: hash
                 }));
 
-                // Clear the hash from the URL
+                // clear the has from the url
                 window.location.hash = '';
-
+                //if it is correct log in and take us to game page
                 if (hash.access_token) {
-                    // Store the token in localStorage
+                    // put the token in local storage
                     localStorage.setItem('spotify_access_token', hash.access_token);
 
-                    // Calculate expiration time
+                    // amount of time local storage is going to hold this token
                     const expirationTime = new Date().getTime() + (parseInt(hash.expires_in) * 1000);
                     localStorage.setItem('spotify_token_expiration', expirationTime);
 
-                    // Fetch user profile
+                    // get the actual profile and set it as the profile state
                     const userProfile = await getUserProfile();
                     if (userProfile) {
                         setUser(userProfile);
 
-                        // Log success
+                        // logging in error checking
                         console.log("Authentication successful!", userProfile);
 
-                        // Redirect to the game page
+                        // take them to the game page to play
                         navigate('/game');
                     } else {
+                        //error handling
                         throw new Error("Failed to get user profile");
                     }
+                    //error handling
                 } else if (hash.error) {
                     throw new Error(`Spotify authentication error: ${hash.error}`);
+                    //error handling
                 } else {
                     throw new Error("No access token found in URL");
                 }
+                //error handling with error handling state
             } catch (error) {
                 console.error("Authentication error:", error);
                 setDebugInfo(prev => ({
                     ...prev,
                     error: error.message
                 }));
-
-                // Don't redirect automatically on error to see debug info
-                // navigate('/');
             }
         };
-
+        //run the above function
         handleCallback();
     }, [navigate, setUser]);
 
     return (
         <div>
             <h2>Connecting to Spotify...</h2>
-
-            {/* Debug information - only show on Vercel */}
+            {/* trying to debug using vercel */}
             {window.location.hostname !== 'localhost' && (
                 <div style={{
                     margin: '20px',
                     padding: '20px',
                     border: '2px solid red',
-                    backgroundColor: '#333',
                     color: 'white',
-                    fontFamily: 'monospace'
                 }}>
-                    <h3>Debug Information</h3>
-                    <p><strong>Current URL:</strong> {debugInfo.url}</p>
-                    <p><strong>URL Hash:</strong> {debugInfo.hash || '[empty]'}</p>
-
-                    <h4>Parsed Hash Data:</h4>
-                    <pre>{JSON.stringify(debugInfo.parsedHash, null, 2)}</pre>
-
+                    {/* debug info */}
+                    <h3>info for debugging</h3>
+                    <p><strong>url currently:</strong> {debugInfo.url}</p>
+                    <p><strong>current url hash:</strong> {debugInfo.hash || '[empty]'}</p>
+                    <h4>hash data:</h4>
+                    <p>{JSON.stringify(debugInfo.parsedHash, null, 2)}</p>
+                    {/* debug info */}
                     {debugInfo.error && (
                         <div style={{ color: 'red' }}>
-                            <h4>Error:</h4>
+                            <h4>error:</h4>
                             <p>{debugInfo.error}</p>
                         </div>
                     )}
-
                     <div style={{ marginTop: '20px' }}>
                         <button onClick={() => navigate('/')}>
                             Go Home
