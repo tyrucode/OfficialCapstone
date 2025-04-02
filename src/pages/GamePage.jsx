@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PlaylistGrid from "../components/PlaylistGrid"
 
 function Game() {
     //logic to see if a user is logged in
@@ -30,6 +31,7 @@ function Game() {
                     <h2>To start, choose a playlist!</h2>
                     {/* most likely will be a component kinda thing */}
                     {/* Playlist selection and game content will go here */}
+                    <PlaylistGrid />
                 </>
             ) : (
                 <h2>Loading...</h2>
