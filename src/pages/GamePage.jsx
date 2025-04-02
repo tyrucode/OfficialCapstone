@@ -7,7 +7,7 @@ function Game() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Check if user has a valid token
+        // check if the user has a valid login token
         const token = localStorage.getItem('spotify_access_token');
         const expirationTime = localStorage.getItem('spotify_token_expiration');
         const currentTime = new Date().getTime();
@@ -15,7 +15,7 @@ function Game() {
         if (token && expirationTime && currentTime < expirationTime) {
             setIsAuthenticated(true);
         } else {
-            // Token is missing or expired
+            // if tokens missing/expired do this
             localStorage.removeItem('spotify_access_token');
             localStorage.removeItem('spotify_token_expiration');
             // Redirect to home page if not authenticated
