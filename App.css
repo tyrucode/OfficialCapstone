@@ -312,6 +312,9 @@ a {
 
 /* game page */
 /* Game Time Page Styles */
+/* Add these styles to your App.css file */
+
+/* Game Time Page Styles */
 .game-time-container {
   max-width: 800px;
   margin: 0 auto;
@@ -350,13 +353,96 @@ a {
   width: 100%;
 }
 
-.game-controls {
-  margin-top: 30px;
-  display: flex;
-  gap: 10px;
+.playlist-details h3 {
+  color: #1db954;
+  margin-bottom: 15px;
 }
 
-.game-controls button {
+.audio-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.audio-controls button {
+  background-color: #1db954;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  -webkit-box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.audio-controls button:hover {
+  background-color: #1ed760;
+  transform: translateY(-2px);
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 200px;
+}
+
+.volume-control input[type="range"] {
+  flex-grow: 1;
+  accent-color: #1db954;
+}
+
+.feedback-message {
+  margin: 20px 0;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+  font-weight: bold;
+  background-color: rgba(29, 185, 84, 0.1);
+  border: 1px solid #1db954;
+}
+
+.guess-form {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.guess-input-container {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.guess-input {
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 4px;
+  border: 2px solid #535353;
+  background-color: #212121;
+  color: white;
+  font-size: 16px;
+}
+
+.guess-input:focus {
+  outline: none;
+  border-color: #1db954;
+}
+
+.guess-form button {
   padding: 10px 20px;
   background-color: #1db954;
   color: white;
@@ -367,8 +453,52 @@ a {
   transition: all 0.2s ease;
 }
 
-.game-controls button:hover {
+.guess-form button:hover {
   background-color: #1ed760;
+  transform: translateY(-2px);
+}
+
+.game-over-controls {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.game-over-controls button {
+  padding: 10px 20px;
+  background-color: #1db954;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.game-over-controls button:hover {
+  background-color: #1ed760;
+  transform: translateY(-2px);
+}
+
+.game-controls {
+  margin-top: 30px;
+  display: flex;
+  gap: 10px;
+}
+
+.game-controls button {
+  padding: 10px 20px;
+  background-color: #535353;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.game-controls button:hover {
+  background-color: #6b6b6b;
   transform: translateY(-2px);
 }
 

@@ -63,7 +63,11 @@ function PlaylistGrid() {
                             //playlist info
                             key={playlist.id}
                             className="playlist-card"
-                            onClick={() => selectPlaylist(playlist.id, playlist.name)}
+                            onClick={() => selectPlaylist(playlist.id,
+                                playlist.name,
+                                // if playlist image exists there is one then return the image url otherwise return null
+                                playlist.images && playlist.images.length > 0 ? playlist.images[0].url : null
+                            )}
                         >
                             <div className="playlist-image-container">
                                 {playlist.images && playlist.images.length > 0 ? (
