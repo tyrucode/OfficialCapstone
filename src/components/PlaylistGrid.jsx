@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
 function PlaylistGrid() {
     const [userPlaylists, setUserPlaylists] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPlaylists = async () => {
@@ -35,12 +37,21 @@ function PlaylistGrid() {
         fetchPlaylists();
     }, []);
 
-    const selectPlaylist = (playlistId, playlistName) => {
+    const selectPlaylist = (playlistId, playlistName, playlistImage) => {
+        //little error handling
         console.log(`selected playlist - ${playlistName} (${playlistId})`);
-        //future 
+        //go to corresponding gametime page and send the Id, Name, and Image to that page
+        navigate('/gametime', {
+            state: {
+                playlistId,
+                playlistName,
+                playlistImage
+            }
+        });
     };
     //loading ui text
     if (loading) return <div className="loading-container"><p>Loading playlists...</p></div>;
+
     return (
         <div className="playlist-container">
             <h3>Your Playlists</h3>
@@ -75,7 +86,7 @@ function PlaylistGrid() {
                         </div>
                         // if somehow user has no playlist display ui text
                     )) :
-                    <p className="no-playlists">No personal playlists found</p>
+                    <p className="no-playlists">No saved/personal playlists have been found, save some to play the game!</p>
                 }
             </div>
         </div>

@@ -1,12 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router'
 
 function GameTimePage() {
+    //location to get the data from the playlist that was selected
+    const location = useLocation();
+    const navigate = useNavigate();
+    // destructuring
+    const { playlistId, playlistName, playlistImage } = location.state || {};
+
+    //checking if data for playlist was passed if not go back
+    useEffect(() => {
+        if (!playlistId) {
+            navigate('/game')
+        }
+    })
+    //loading screen if needed
+    if (!playlistId) {
+        return <div>Loading...</div>;
+    }
+
     return (
-        <>
-            <h1>game timem</h1>
-            {/* display the playlist in the center with the name of it at the top */}
-        </>
-    )
+        <div className="game-time-container">
+            <img src={playlistImage} />
+        </div >
+    );
 }
 
 export default GameTimePage
