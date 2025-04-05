@@ -9,14 +9,16 @@ function Home() {
                 <div className='indiv-steps'>
                     Step 1:
                     <br />
-                    Sign into your Spotify Account
+                    Sign into your Spotify Account  <br />
+                    &#40;Top Right&#x29;
                 </div>
                 <div className='indiv-steps'>
                     Step 2:
                     <br />
-                    Choose either a personal or one of our playlists
+                    Choose either a personal playlist or a saved one from your library
                 </div>
                 <div className='indiv-steps'>Step 3:
+                    <br />
                     Try to guess the song based on a snippet in under three guesses
                 </div>
 

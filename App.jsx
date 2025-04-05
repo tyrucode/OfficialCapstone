@@ -1,7 +1,7 @@
 import { RouterProvider, Route, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 // pages
 import Home from "./src/pages/Home"
-import GamePage from "./src/pages/GamePage"
+import PlaylistDisplay from "./src/pages/PlaylistDisplay"
 import SpotifyCallback from "./src/pages/SpotifyCallback"
 import NotFound from "./src/pages/NotFound"
 // layouts
@@ -14,7 +14,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
       <Route index element={<Home />} />
-      <Route path="game" element={<GamePage />} />
+      <Route path="game" element={<PlaylistDisplay />} />
       <Route path="callback" element={<SpotifyCallback />} />
       <Route path="*" element={<NotFound />} />
     </Route>

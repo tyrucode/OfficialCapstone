@@ -64,24 +64,24 @@ function SpotifyCallback() {
                         setUser(userProfile);
 
                         // logging in error checking
-                        console.log("Authentication successful!", userProfile);
+                        console.log("auth successful", userProfile);
 
                         // take them to the game page to play
                         navigate('/game');
                     } else {
                         //error handling
-                        throw new Error("Failed to get user profile");
+                        throw new Error("failing to get the users profile");
                     }
                     //error handling
                 } else if (hash.error) {
-                    throw new Error(`Spotify authentication error: ${hash.error}`);
+                    throw new Error(`spotify auth error: ${hash.error}`);
                     //error handling
                 } else {
-                    throw new Error("No access token found in URL");
+                    throw new Error("no access token in url");
                 }
                 //error handling with error handling state
             } catch (error) {
-                console.error("Authentication error:", error);
+                console.error("auth error:", error);
                 setDebugInfo(prev => ({
                     ...prev,
                     error: error.message
