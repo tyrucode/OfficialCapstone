@@ -1,4 +1,4 @@
-// src/services/SpotifyPlayer.js
+// src/services/spotifyPlayer.js
 export class SpotifyPlayer {
     constructor() {
         this.player = null;
@@ -12,16 +12,16 @@ export class SpotifyPlayer {
 
     async initializePlayer() {
         return new Promise((resolve, reject) => {
+            // Define the callback function FIRST before loading the script
+            window.onSpotifyWebPlaybackSDKReady = () => {
+                this.createPlayer(resolve, reject);
+            };
+
             // Load Spotify Web Playback SDK script if not already loaded
             if (!window.Spotify) {
                 const script = document.createElement('script');
                 script.src = 'https://sdk.scdn.co/spotify-player.js';
                 script.async = true;
-
-                script.onload = () => {
-                    // SDK will call window.onSpotifyWebPlaybackSDKReady
-                    window.onSpotifyWebPlaybackSDKReady = this.onSpotifyWebPlaybackSDKReady.bind(this, resolve, reject);
-                };
 
                 script.onerror = (error) => {
                     reject(new Error('Failed to load Spotify Web Playback SDK'));
@@ -31,12 +31,13 @@ export class SpotifyPlayer {
             } else if (this.player) {
                 resolve(this.player);
             } else {
-                window.onSpotifyWebPlaybackSDKReady = this.onSpotifyWebPlaybackSDKReady.bind(this, resolve, reject);
+                // If the SDK is already loaded but the player isn't created yet
+                this.createPlayer(resolve, reject);
             }
         });
     }
 
-    onSpotifyWebPlaybackSDKReady(resolve, reject) {
+    createPlayer(resolve, reject) {
         const token = localStorage.getItem('spotify_access_token');
         if (!token) {
             reject(new Error('No access token found'));
@@ -98,8 +99,6 @@ export class SpotifyPlayer {
         }
 
         // Calculate a random position in the song (in milliseconds)
-        // We'll get the track duration later, for now just use a random position
-        // between 10-60 seconds to avoid intros
         this.snippetStartTime = Math.floor(Math.random() * 50000) + 10000; // Between 10s and 60s
 
         try {
