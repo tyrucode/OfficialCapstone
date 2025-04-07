@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { spotifyPlayer } from '../services/spotifyPlayer';
 
 function GameTimePage() {
     // location/nav to get playlist that was selected
@@ -18,18 +19,66 @@ function GameTimePage() {
     const [gameStatus, setGameStatus] = useState('playing'); // make this win / lost / playing
     const [feedback, setFeedback] = useState('');
     const [playlistImage, setPlaylistImage] = useState('');
+    const [isPremium, setIsPremium] = useState(false);
+    const [playerReady, setPlayerReady] = useState(false);
 
     // state for the audio player
-    const [audio] = useState(new Audio());
     const [isPlaying, setIsPlaying] = useState(false);
 
-    // when component mounts get the playlist
+    // when component mounts get the playlist and initialize the player
     useEffect(() => {
         // if no playlist data has been passed return to game page
         if (!playlistId) {
             navigate('/game');
             return;
         }
+
+        const checkUserSubscription = async () => {
+            try {
+                const token = localStorage.getItem('spotify_access_token');
+                const response = await fetch('https://api.spotify.com/v1/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch user data: ${response.status}`);
+                }
+
+                const userData = await response.json();
+                // Check if user has premium
+                const hasPremium = userData.product === 'premium';
+                setIsPremium(hasPremium);
+
+                if (!hasPremium) {
+                    setFeedback("Spotify Premium is required to play this game. Please upgrade your Spotify account.");
+                    setLoading(false);
+                    return false;
+                }
+
+                return true;
+            } catch (error) {
+                console.error("Error checking subscription:", error);
+                setFeedback(`Error: ${error.message}. Please try again.`);
+                setLoading(false);
+                return false;
+            }
+        };
+
+        const initializePlayer = async () => {
+            try {
+                await spotifyPlayer.initializePlayer();
+                setPlayerReady(true);
+                return true;
+            } catch (error) {
+                console.error("Failed to initialize player:", error);
+                setFeedback(`Error: ${error.message}. Please try again.`);
+                setLoading(false);
+                return false;
+            }
+        };
+
         //fetch playlist details
         const fetchPlaylistDetails = async () => {
             try {
@@ -65,27 +114,26 @@ function GameTimePage() {
                 }
                 // making response a variable
                 const tracksData = await tracksResponse.json();
-                //making sure the tracks are valid and work
+
+                // We don't need to filter by preview_url anymore since we're using full tracks
                 const validTracks = tracksData.items.filter(item =>
                     item.track &&
-                    item.track.preview_url !== null
+                    !item.track.is_local // Filter out local tracks
                 );
+
                 //error handling for empty tracks
                 if (validTracks.length === 0) {
                     setFeedback("No playable tracks in this playlist, please choose another playlist and try again.");
                     setLoading(false);
                     return;
                 }
+
                 //set the tracks to the working track
                 setTracks(validTracks);
 
                 // take the valid tracks and select a random track from that, then set the current track to the random one 
                 const randomTrack = validTracks[Math.floor(Math.random() * validTracks.length)].track;
                 setCurrentTrack(randomTrack);
-
-                // set up the audio for it
-                audio.src = randomTrack.preview_url;
-                audio.volume = 0.7;
 
                 setLoading(false);
             } catch (error) {
@@ -94,30 +142,42 @@ function GameTimePage() {
                 setLoading(false);
             }
         };
-        //run the above function
-        fetchPlaylistDetails();
 
-        //small cleanup function for audio purposes
-        return () => {
-            audio.pause();
-            audio.src = '';
+        const setup = async () => {
+            const hasPremium = await checkUserSubscription();
+            if (!hasPremium) return;
+
+            const playerInitialized = await initializePlayer();
+            if (!playerInitialized) return;
+
+            await fetchPlaylistDetails();
         };
-    }, [playlistId, navigate, audio]);
+
+        //run the setup
+        setup();
+
+        // Clean up function
+        return () => {
+            spotifyPlayer.disconnect();
+        };
+    }, [playlistId, navigate]);
 
     // play/pause for audio controls
-    const togglePlay = () => {
+    const togglePlay = async () => {
         if (isPlaying) {
-            audio.pause();
+            await spotifyPlayer.pausePlayback();
         } else {
-            audio.play();
+            if (currentTrack) {
+                await spotifyPlayer.playTrackSnippet(currentTrack.uri);
+            }
         }
         setIsPlaying(!isPlaying);
     };
 
     // volume changer controls
     const handleVolumeChange = (e) => {
-        const volume = e.target.value / 100;
-        audio.volume = volume;
+        const volume = e.target.value;
+        spotifyPlayer.setVolume(volume);
     };
 
     // function for submissions
@@ -137,17 +197,17 @@ function GameTimePage() {
             //let user know they won
             setFeedback(`Correct! The song is "${currentTrack.name}" by ${currentTrack.artists[0].name}.`);
             //pause audio
-            audio.pause();
+            spotifyPlayer.pausePlayback();
             setIsPlaying(false);
         } else {
-            // if theyre wrong they lose 1 life
+            // if they're wrong they lose 1 life
             const newGuessesLeft = guessesLeft - 1;
             setGuessesLeft(newGuessesLeft);
             //logic for a loss
             if (newGuessesLeft === 0) {
                 setGameStatus('lost');
                 setFeedback(`Game over! The song was "${currentTrack.name}" by ${currentTrack.artists[0].name}. LOSER`);
-                audio.pause();
+                spotifyPlayer.pausePlayback();
                 setIsPlaying(false);
             } else {
                 setFeedback(`Wrong guess! You have ${newGuessesLeft} guesses left.`);
@@ -166,14 +226,13 @@ function GameTimePage() {
         setFeedback('');
         setIsPlaying(false);
 
+        // Pause any current playback
+        spotifyPlayer.pausePlayback();
+
         // selecting a random track again for new game
         if (tracks.length > 0) {
             const randomTrack = tracks[Math.floor(Math.random() * tracks.length)].track;
             setCurrentTrack(randomTrack);
-
-            // resetting up the audio
-            audio.src = randomTrack.preview_url;
-            audio.pause();
         }
     };
 
@@ -185,6 +244,21 @@ function GameTimePage() {
     // loading screen
     if (loading) {
         return <div className="loading-container">Loading game...</div>;
+    }
+
+    // If user doesn't have premium, show message
+    if (!isPremium) {
+        return (
+            <div className="game-time-container">
+                <div className="feedback-message">
+                    <h3>Spotify Premium Required</h3>
+                    <p>This game requires a Spotify Premium subscription to play full track snippets.</p>
+                    <div className="game-controls">
+                        <button onClick={goBack}>Go Back</button>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -199,7 +273,7 @@ function GameTimePage() {
                 )}
                 <div className="playlist-details">
                     <h3>{playlistName}</h3>
-                    {currentTrack && gameStatus === 'playing' && (
+                    {currentTrack && gameStatus === 'playing' && playerReady && (
                         <div className="audio-controls">
                             <button onClick={togglePlay}>
                                 {isPlaying ? 'Pause' : 'Play'} Snippet
