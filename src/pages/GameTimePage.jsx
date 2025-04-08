@@ -7,10 +7,10 @@ function GameTimePage() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Destructuring playlist data into location state or the object w info
+    // getting playlist name/id/image from location.state
     const { playlistId, playlistName } = location.state || {};
 
-    // state for the game itself
+    // all state to load the game itself
     const [loading, setLoading] = useState(true);
     const [currentTrack, setCurrentTrack] = useState(null);
     const [tracks, setTracks] = useState([]);
@@ -19,20 +19,20 @@ function GameTimePage() {
     const [gameStatus, setGameStatus] = useState('playing'); // make this win / lost / playing
     const [feedback, setFeedback] = useState('');
     const [playlistImage, setPlaylistImage] = useState('');
-    const [isPremium, setIsPremium] = useState(false);
+    const [isPremium, setIsPremium] = useState(false); //making sure nonpremium users cant play
     const [playerReady, setPlayerReady] = useState(false);
 
     // state for the audio player
     const [isPlaying, setIsPlaying] = useState(false);
 
-    // when component mounts get the playlist and initialize the player
+    // when component mounts get the playlist and initialize the game
     useEffect(() => {
-        // if no playlist data has been passed return to game page
+        // if no playlist has been passed go back to game page
         if (!playlistId) {
             navigate('/game');
             return;
         }
-
+        //checking subscription 
         const checkUserSubscription = async () => {
             try {
                 const token = localStorage.getItem('spotify_access_token');
@@ -41,23 +41,24 @@ function GameTimePage() {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-
+                // error handling
                 if (!response.ok) {
                     throw new Error(`Failed to fetch user data: ${response.status}`);
                 }
-
+                //getting users data
                 const userData = await response.json();
-                // Check if user has premium
+                // cmaking sure they have premium
                 const hasPremium = userData.product === 'premium';
                 setIsPremium(hasPremium);
-
+                //if no premium dont allow game access
                 if (!hasPremium) {
                     setFeedback("Spotify Premium is required to play this game. Please upgrade your Spotify account.");
                     setLoading(false);
                     return false;
                 }
 
-                return true;
+                return true; //true meaning they do have premium
+                //error handling
             } catch (error) {
                 console.error("Error checking subscription:", error);
                 setFeedback(`Error: ${error.message}. Please try again.`);
@@ -65,27 +66,27 @@ function GameTimePage() {
                 return false;
             }
         };
-
+        //starting the game through our initializePlayer function from earlier and setting readiness to true
         const initializePlayer = async () => {
             try {
                 await spotifyPlayer.initializePlayer();
                 setPlayerReady(true);
                 return true;
             } catch (error) {
-                console.error("Failed to initialize player:", error);
-                setFeedback(`Error: ${error.message}. Please try again.`);
+                console.error("failed to initialize the player:", error);
+                setFeedback(`error: ${error.message}. please refresh or try again.`);
                 setLoading(false);
                 return false;
             }
         };
 
-        //fetch playlist details
+        //get the playlist details
         const fetchPlaylistDetails = async () => {
             try {
-                //fetch playlist data using token
+                //get token from local storage
                 const token = localStorage.getItem('spotify_access_token');
 
-                // get playlist details
+                //  use that token for the playlist details of whatever one user selects
                 const playlistResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -93,16 +94,15 @@ function GameTimePage() {
                 });
                 //error handling
                 if (!playlistResponse.ok) {
-                    throw new Error(`failed to fetch playlist: ${playlistResponse.status}`);
+                    throw new Error(`failed to get the playlist try again, error: ${playlistResponse.status}`);
                 }
-                //playlist variable
+                //setting the playlist data as a variable
                 const playlistData = await playlistResponse.json();
                 // setting the playlist image as the image from api response
                 if (playlistData.images && playlistData.images.length > 0) {
                     setPlaylistImage(playlistData.images[0].url);
                 }
-
-                // after getting image get all tracks from the playlist
+                // get all the playlists tracks
                 const tracksResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -131,7 +131,7 @@ function GameTimePage() {
                 //set the tracks to the working track
                 setTracks(validTracks);
 
-                // take the valid tracks and select a random track from that, then set the current track to the random one 
+                // take the working tracks and select a random track from that then set the current track to that random one 
                 const randomTrack = validTracks[Math.floor(Math.random() * validTracks.length)].track;
                 setCurrentTrack(randomTrack);
 
@@ -142,7 +142,7 @@ function GameTimePage() {
                 setLoading(false);
             }
         };
-
+        //setup function that combines everything above will also checking for premium and making sure user is intialized
         const setup = async () => {
             const hasPremium = await checkUserSubscription();
             if (!hasPremium) return;
@@ -156,13 +156,13 @@ function GameTimePage() {
         //run the setup
         setup();
 
-        // Clean up function
+        // cleanup function
         return () => {
             spotifyPlayer.disconnect();
         };
     }, [playlistId, navigate]);
 
-    // play/pause for audio controls
+    // controls for audio
     const togglePlay = async () => {
         if (isPlaying) {
             await spotifyPlayer.pausePlayback();
