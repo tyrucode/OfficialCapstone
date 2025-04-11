@@ -11,16 +11,17 @@ function GameTimePage() {
     const { playlistId, playlistName } = location.state || {};
 
     // all state to load the game itself
-    const [loading, setLoading] = useState(true);
-    const [currentTrack, setCurrentTrack] = useState(null);
-    const [tracks, setTracks] = useState([]);
-    const [guessInput, setGuessInput] = useState('');
-    const [guessesLeft, setGuessesLeft] = useState(3);
+    const [loading, setLoading] = useState(true); //loading screen
+    const [currentTrack, setCurrentTrack] = useState(null); //current track
+    const [tracks, setTracks] = useState([]); //tracks available
+    const [guessInput, setGuessInput] = useState(''); //guesses
+    const [guessesLeft, setGuessesLeft] = useState(3); //guesses left
     const [gameStatus, setGameStatus] = useState('playing'); // make this win / lost / playing
-    const [feedback, setFeedback] = useState('');
-    const [playlistImage, setPlaylistImage] = useState('');
+    const [feedback, setFeedback] = useState(''); //feedback message
+    const [playlistImage, setPlaylistImage] = useState(''); //img
     const [isPremium, setIsPremium] = useState(false); //making sure nonpremium users cant play
-    const [playerReady, setPlayerReady] = useState(false);
+    const [playerReady, setPlayerReady] = useState(false); //seeing if game is ready
+    const [score, setScore] = useState(0); //user score
 
     // state for the audio player
     const [isPlaying, setIsPlaying] = useState(false);
@@ -196,6 +197,8 @@ function GameTimePage() {
             setGameStatus('won');
             //let user know they won
             setFeedback(`Correct! The song is "${currentTrack.name}" by ${currentTrack.artists[0].name}.`);
+            //update user score
+            setScore(score + 100);
             //pause audio
             spotifyPlayer.pausePlayback();
             setIsPlaying(false);
@@ -209,6 +212,7 @@ function GameTimePage() {
                 setFeedback(`Game over! The song was "${currentTrack.name}" by ${currentTrack.artists[0].name}. LOSER`);
                 spotifyPlayer.pausePlayback();
                 setIsPlaying(false);
+                setScore(0);
             } else {
                 setFeedback(`Wrong guess! You have ${newGuessesLeft} guesses left.`);
             }
@@ -225,6 +229,7 @@ function GameTimePage() {
         setGameStatus('playing');
         setFeedback('');
         setIsPlaying(false);
+
 
         // Pause any current playback
         spotifyPlayer.pausePlayback();
@@ -272,7 +277,9 @@ function GameTimePage() {
                     />
                 )}
                 <div className="playlist-details">
-                    <h3>{playlistName}</h3>
+                    <div className='titleScore'>
+                        <h2>{playlistName}<h2 id='userScore'>{score}</h2></h2>
+                    </div>
                     {currentTrack && gameStatus === 'playing' && playerReady && (
                         <div className="audio-controls">
                             <button onClick={togglePlay}>

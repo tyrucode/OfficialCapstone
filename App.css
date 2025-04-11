@@ -353,9 +353,13 @@ a {
   width: 100%;
 }
 
-.playlist-details h3 {
+.titleScore {
   color: #1db954;
   margin-bottom: 15px;
+}
+
+#userScore {
+  align-self: flex-start;
 }
 
 .audio-controls {
