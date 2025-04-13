@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { spotifyPlayer } from '../services/spotifyPlayer';
+import { submitHighScore } from '../services/highscoreApi';
+import { useUser } from '../context/UserContext';
 
 function GameTimePage() {
     // location/nav to get playlist that was selected
     const location = useLocation();
     const navigate = useNavigate();
+    const { user } = useUser();
 
     // getting playlist name/id/image from location.state
     const { playlistId, playlistName } = location.state || {};
@@ -22,6 +25,7 @@ function GameTimePage() {
     const [isPremium, setIsPremium] = useState(false); //making sure nonpremium users cant play
     const [playerReady, setPlayerReady] = useState(false); //seeing if game is ready
     const [score, setScore] = useState(0); //user score
+    const [highScoreSaved, setHighScoreSaved] = useState(false);
 
     // state for the audio player
     const [isPlaying, setIsPlaying] = useState(false);
@@ -163,6 +167,36 @@ function GameTimePage() {
         };
     }, [playlistId, navigate]);
 
+    // Effect to save high score when game is won
+    useEffect(() => {
+        const saveHighScore = async () => {
+            if (gameStatus === 'won' && score > 0 && !highScoreSaved && user) {
+                try {
+                    // Get user's profile picture
+                    const profilePicture = user.images && user.images.length > 0
+                        ? user.images[0].url
+                        : '';
+
+                    // Submit the high score
+                    await submitHighScore(
+                        score,
+                        playlistId,
+                        playlistName,
+                        profilePicture
+                    );
+
+                    setHighScoreSaved(true);
+                    setFeedback(prevFeedback => prevFeedback + ' High score saved!');
+                } catch (error) {
+                    console.error("Error saving high score:", error);
+                    setFeedback(prevFeedback => prevFeedback + ' Could not save high score.');
+                }
+            }
+        };
+
+        saveHighScore();
+    }, [gameStatus, score, highScoreSaved, playlistId, playlistName, user]);
+
     // controls for audio
     const togglePlay = async () => {
         if (isPlaying) {
@@ -229,7 +263,7 @@ function GameTimePage() {
         setGameStatus('playing');
         setFeedback('');
         setIsPlaying(false);
-
+        setHighScoreSaved(false);
 
         // Pause any current playback
         spotifyPlayer.pausePlayback();
@@ -244,6 +278,16 @@ function GameTimePage() {
     // to take user back to game page
     const goBack = () => {
         navigate('/game');
+    };
+
+    // View leaderboard
+    const viewLeaderboard = () => {
+        navigate('/leaderboard', {
+            state: {
+                playlistId,
+                playlistName
+            }
+        });
     };
 
     // loading screen
@@ -323,6 +367,7 @@ function GameTimePage() {
             ) : (
                 <div className="game-over-controls">
                     <button onClick={playNewGame}>Play Again</button>
+                    <button onClick={viewLeaderboard}>View Leaderboard</button>
                 </div>
             )}
 
