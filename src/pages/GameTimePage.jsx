@@ -292,7 +292,7 @@ function GameTimePage() {
                                     id="volume"
                                     min="0"
                                     max="100"
-                                    defaultValue="70"
+                                    defaultValue="30"
                                     onChange={handleVolumeChange}
                                 />
                             </div>
