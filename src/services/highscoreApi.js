@@ -1,10 +1,18 @@
+<<<<<<< HEAD
 
 const BASE_URL = 'https://official-capstone.vercel.app/';
+=======
+// Service for high score-related API calls
+>>>>>>> c3e967e (adding leaderboard)
 
 // Get JWT token for the user
 export const getAuthToken = async (userId, username) => {
     try {
+<<<<<<< HEAD
         const response = await fetch(`${BASE_URL}/auth/token`, {
+=======
+        const response = await fetch('http://localhost:3000/api/auth/token', {
+>>>>>>> c3e967e (adding leaderboard)
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -58,7 +66,11 @@ export const submitHighScore = async (score, playlistId, playlistName, profilePi
             }
         }
 
+<<<<<<< HEAD
         const response = await fetch(`${BASE_URL}/highscores`, {
+=======
+        const response = await fetch('http://localhost:3000/api/highscores', {
+>>>>>>> c3e967e (adding leaderboard)
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -86,7 +98,11 @@ export const submitHighScore = async (score, playlistId, playlistName, profilePi
 // Get top high scores
 export const getTopHighScores = async (limit = 10, playlistId = null) => {
     try {
+<<<<<<< HEAD
         let url = `${BASE_URL}/highscores?limit=${limit}`;
+=======
+        let url = `http://localhost:3000/api/highscores?limit=${limit}`;
+>>>>>>> c3e967e (adding leaderboard)
 
         if (playlistId) {
             url += `&playlistId=${playlistId}`;
@@ -114,7 +130,11 @@ export const getUserHighScores = async () => {
             throw new Error('Not authenticated');
         }
 
+<<<<<<< HEAD
         const response = await fetch(`${BASE_URL}/highscores/user`, {
+=======
+        const response = await fetch('http://localhost:3000/api/highscores/user', {
+>>>>>>> c3e967e (adding leaderboard)
             headers: {
                 'Authorization': `Bearer ${token}`
             }

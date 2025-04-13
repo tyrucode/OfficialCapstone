@@ -1,16 +1,24 @@
+<<<<<<< HEAD
 // Load environment variables only in development mode
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
+=======
+require('dotenv').config();
+>>>>>>> c3e967e (adding leaderboard)
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+<<<<<<< HEAD
 const path = require('path');
 
 // Check if running in Vercel environment
 const isVercel = process.env.VERCEL === '1';
+=======
+const HighScore = require('./models/HighScore');
+>>>>>>> c3e967e (adding leaderboard)
 
 const app = express();
 
@@ -18,6 +26,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+<<<<<<< HEAD
 // MongoDB connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://ruiztyler24:<db_password>@cluster0.xybjo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const DB_NAME = process.env.DB_NAME || 'Guessify';
@@ -45,12 +54,21 @@ try {
 // Connect to MongoDB
 mongoose.connect(MONGODB_URI, {
     dbName: DB_NAME
+=======
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI, {
+    dbName: process.env.DB_NAME
+>>>>>>> c3e967e (adding leaderboard)
 })
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
 // JWT Secret
+<<<<<<< HEAD
 const JWT_SECRET = process.env.JWT_SECRET || 'guessify-secret-key-change-in-production';
+=======
+const JWT_SECRET = 'guessify-secret-key-change-in-production';
+>>>>>>> c3e967e (adding leaderboard)
 
 // Middleware to verify JWT
 const authenticateToken = (req, res, next) => {
@@ -66,7 +84,11 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
+<<<<<<< HEAD
 // API Routes
+=======
+// Generate JWT token for a user
+>>>>>>> c3e967e (adding leaderboard)
 app.post('/api/auth/token', (req, res) => {
     const { userId, username } = req.body;
 
@@ -141,6 +163,7 @@ app.get('/api/highscores/user', authenticateToken, async (req, res) => {
     }
 });
 
+<<<<<<< HEAD
 // Test route for Vercel
 app.get('/api/test', (req, res) => {
     res.json({ message: 'API is working!' });
@@ -156,3 +179,9 @@ if (!isVercel) {
 
 // For Vercel
 module.exports = app;
+=======
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+>>>>>>> c3e967e (adding leaderboard)
