@@ -1,9 +1,16 @@
-require('dotenv').config();
+// Load environment variables only in development mode
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const HighScore = require('./models/HighScore');
+const path = require('path');
+
+// Check if running in Vercel environment
+const isVercel = process.env.VERCEL === '1';
 
 const app = express();
 
@@ -11,15 +18,39 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// MongoDB connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://ruiztyler24:<db_password>@cluster0.xybjo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const DB_NAME = process.env.DB_NAME || 'Guessify';
+
+// Define the HighScore model in the server file for Vercel deployment
+const highScoreSchema = new mongoose.Schema({
+    userId: { type: String, required: true },
+    username: { type: String, required: true },
+    profilePicture: { type: String },
+    score: { type: Number, required: true },
+    playlistId: { type: String, required: true },
+    playlistName: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now }
+});
+
+let HighScore;
+try {
+    // Try to get the model if it already exists
+    HighScore = mongoose.model('HighScore');
+} catch (e) {
+    // If model doesn't exist, create it
+    HighScore = mongoose.model('HighScore', highScoreSchema);
+}
+
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-    dbName: process.env.DB_NAME
+mongoose.connect(MONGODB_URI, {
+    dbName: DB_NAME
 })
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('MongoDB connection error:', err));
 
 // JWT Secret
-const JWT_SECRET = 'guessify-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || 'guessify-secret-key-change-in-production';
 
 // Middleware to verify JWT
 const authenticateToken = (req, res, next) => {
@@ -35,7 +66,7 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// Generate JWT token for a user
+// API Routes
 app.post('/api/auth/token', (req, res) => {
     const { userId, username } = req.body;
 
@@ -110,7 +141,18 @@ app.get('/api/highscores/user', authenticateToken, async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Test route for Vercel
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'API is working!' });
 });
+
+// For Express standalone server
+if (!isVercel) {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+// For Vercel
+module.exports = app;
