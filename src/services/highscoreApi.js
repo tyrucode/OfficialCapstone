@@ -1,5 +1,5 @@
 
-const BASE_URL = 'https://official-capstone.vercel.app/api';
+const BASE_URL = 'https://official-capstone.vercel.app/';
 
 // Get JWT token for the user
 export const getAuthToken = async (userId, username) => {

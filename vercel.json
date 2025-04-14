@@ -1,15 +1,8 @@
 {
-    "version": 2,
-    "builds": [
+    "rewrites": [
         {
-            "src": "src/services/Server.js",
-            "use": "@vercel/node"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "src/services/Server.js"
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ]
 }
