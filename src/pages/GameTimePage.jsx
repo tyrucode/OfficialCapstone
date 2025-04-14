@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { spotifyPlayer } from '../services/spotifyPlayer';
-import { submitHighScore } from '../services/highscoreApi';
 import { useUser } from '../context/UserContext';
 
 function GameTimePage() {
