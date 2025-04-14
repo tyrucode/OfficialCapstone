@@ -51,7 +51,7 @@ function Leaderboard() {
     }, [location.state, user]);
 
     const handlePlaylistClear = () => {
-        setSelectedPlaylist(null);
+        // setSelectedPlaylist(null);
         navigate('/leaderboard', { replace: true });
     };
 
