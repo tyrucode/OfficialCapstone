@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { getUserProfile } from '../services/spotifyApi';
 import { useUser } from '../context/UserContext';
 
+//this will talk to spotify essentially and allow us to sign in
 function SpotifyCallback() {
     const navigate = useNavigate();
     const { setUser } = useUser();
+    //error handling state
     const [debugInfo, setDebugInfo] = useState({
         url: '',
         hash: '',
@@ -14,18 +16,23 @@ function SpotifyCallback() {
     });
 
     useEffect(() => {
+        //error handling state
         setDebugInfo({
             url: window.location.href,
             hash: window.location.hash,
             parsedHash: {},
             error: null
         });
-
+        //actual callback
         const handleCallback = async () => {
             try {
+                //get token info from the hash
                 const hash = window.location.hash
+                    //crop it at the first index
                     .substring(1)
+                    //split at the symbol
                     .split('&')
+                    //reduce to what we need
                     .reduce((initial, item) => {
                         if (item) {
                             const parts = item.split('=');
@@ -34,69 +41,61 @@ function SpotifyCallback() {
                         return initial;
                     }, {});
 
+                // updating the info for error handling
                 setDebugInfo(prev => ({
                     ...prev,
                     parsedHash: hash
                 }));
 
+                // clear the has from the url
                 window.location.hash = '';
-
+                //if it is correct log in and take us to game page
                 if (hash.access_token) {
-                    // Store Spotify access token
+                    // put the token in local storage
                     localStorage.setItem('spotify_access_token', hash.access_token);
+
+                    // amount of time local storage is going to hold this token
                     const expirationTime = new Date().getTime() + (parseInt(hash.expires_in) * 1000);
                     localStorage.setItem('spotify_token_expiration', expirationTime);
 
-                    // Get user profile from Spotify
+                    // get the actual profile and set it as the profile state
                     const userProfile = await getUserProfile();
                     if (userProfile) {
                         setUser(userProfile);
 
-                        // Get JWT token from your backend
-                        try {
-                            const response = await fetch('/api/auth/spotify-callback', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(userProfile)
-                            });
+                        // logging in error checking
+                        console.log("auth successful", userProfile);
 
-                            if (response.ok) {
-                                const { token } = await response.json();
-                                localStorage.setItem('jwt_token', token);
-                            } else {
-                                console.error('Failed to get JWT token');
-                            }
-                        } catch (tokenError) {
-                            console.error('Error getting JWT token:', tokenError);
-                        }
-
-                        console.log("Auth successful", userProfile);
+                        // take them to the game page to play
                         navigate('/game');
                     } else {
-                        throw new Error("Failed to get user profile");
+                        //error handling
+                        throw new Error("failing to get the users profile");
                     }
+                    //error handling
                 } else if (hash.error) {
-                    throw new Error(`Spotify auth error: ${hash.error}`);
+                    throw new Error(`spotify auth error: ${hash.error}`);
+                    //error handling
                 } else {
-                    throw new Error("No access token in URL");
+                    throw new Error("no access token in url");
                 }
+                //error handling with error handling state
             } catch (error) {
-                console.error("Auth error:", error);
+                console.error("auth error:", error);
                 setDebugInfo(prev => ({
                     ...prev,
                     error: error.message
                 }));
             }
         };
-
+        //run the above function
         handleCallback();
     }, [navigate, setUser]);
 
     return (
         <div>
             <h2>Connecting to Spotify...</h2>
+            {/* trying to debug using vercel */}
             {window.location.hostname !== 'localhost' && (
                 <div style={{
                     margin: '20px',
@@ -104,14 +103,16 @@ function SpotifyCallback() {
                     border: '2px solid red',
                     color: 'white',
                 }}>
-                    <h3>Info for debugging</h3>
-                    <p><strong>URL currently:</strong> {debugInfo.url}</p>
-                    <p><strong>Current URL hash:</strong> {debugInfo.hash || '[empty]'}</p>
-                    <h4>Hash data:</h4>
+                    {/* debug info */}
+                    <h3>info for debugging</h3>
+                    <p><strong>url currently:</strong> {debugInfo.url}</p>
+                    <p><strong>current url hash:</strong> {debugInfo.hash || '[empty]'}</p>
+                    <h4>hash data:</h4>
                     <p>{JSON.stringify(debugInfo.parsedHash, null, 2)}</p>
+                    {/* debug info */}
                     {debugInfo.error && (
                         <div style={{ color: 'red' }}>
-                            <h4>Error:</h4>
+                            <h4>error:</h4>
                             <p>{debugInfo.error}</p>
                         </div>
                     )}
