@@ -24,7 +24,7 @@ function GameTimePage() {
     const [isPremium, setIsPremium] = useState(false); //making sure nonpremium users cant play
     const [playerReady, setPlayerReady] = useState(false); //seeing if game is ready
     const [score, setScore] = useState(0); //user score
-    const [highScoreSaved, setHighScoreSaved] = useState(false);
+
 
     // state for the audio player
     const [isPlaying, setIsPlaying] = useState(false);
@@ -166,35 +166,7 @@ function GameTimePage() {
         };
     }, [playlistId, navigate]);
 
-    // Effect to save high score when game is won
-    useEffect(() => {
-        const saveHighScore = async () => {
-            if (gameStatus === 'won' && score > 0 && !highScoreSaved && user) {
-                try {
-                    // Get user's profile picture
-                    const profilePicture = user.images && user.images.length > 0
-                        ? user.images[0].url
-                        : '';
 
-                    // Submit the high score
-                    await submitHighScore(
-                        score,
-                        playlistId,
-                        playlistName,
-                        profilePicture
-                    );
-
-                    setHighScoreSaved(true);
-                    setFeedback(prevFeedback => prevFeedback + ' High score saved!');
-                } catch (error) {
-                    console.error("Error saving high score:", error);
-                    setFeedback(prevFeedback => prevFeedback + ' Could not save high score.');
-                }
-            }
-        };
-
-        saveHighScore();
-    }, [gameStatus, score, highScoreSaved, playlistId, playlistName, user]);
 
     // controls for audio
     const togglePlay = async () => {
@@ -262,7 +234,7 @@ function GameTimePage() {
         setGameStatus('playing');
         setFeedback('');
         setIsPlaying(false);
-        setHighScoreSaved(false);
+
 
         // Pause any current playback
         spotifyPlayer.pausePlayback();
