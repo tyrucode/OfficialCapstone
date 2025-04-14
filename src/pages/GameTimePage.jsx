@@ -30,6 +30,34 @@ function GameTimePage() {
     // state for the audio player
     const [isPlaying, setIsPlaying] = useState(false);
 
+    //for when user saves a new highscore
+    useEffect(() => {
+        const saveHighScore = async () => {
+            if (gameStatus === 'won' && score > 0 && !highScoreSaved && user) {
+                try {
+                    // Get user's profile picture
+                    const profilePicture = user.images && user.images.length > 0
+                        ? user.images[0].url
+                        : '';
+
+                    // Submit the high score
+                    await submitHighScore(
+                        score,
+                        profilePicture
+                    );
+
+                    setHighScoreSaved(true);
+                    setFeedback(prevFeedback => prevFeedback + ' High score saved!');
+                } catch (error) {
+                    console.error("Error saving high score:", error);
+                    setFeedback(prevFeedback => prevFeedback + ' Could not save high score.');
+                }
+            }
+        };
+
+        saveHighScore();
+    }, [gameStatus, score, highScoreSaved, user]);
+
     // when component mounts get the playlist and initialize the game
     useEffect(() => {
         // if no playlist has been passed go back to game page

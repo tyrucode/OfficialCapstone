@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const highScoreSchema = new mongoose.Schema({
     userId: {
         type: String,
@@ -13,14 +15,6 @@ const highScoreSchema = new mongoose.Schema({
     },
     score: {
         type: Number,
-        required: true,
-    },
-    playlistId: {
-        type: String,
-        required: true,
-    },
-    playlistName: {
-        type: String,
         required: true,
     },
     timestamp: {
