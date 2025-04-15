@@ -1,16 +1,8 @@
 {
-    "routes": [
+    "rewrites": [
         {
-            "src": "/api/saveScore",
-            "dest": "src/api/saveScore.js"
-        },
-        {
-            "src": "/api/getScores",
-            "dest": "src/api/getScores.js"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/"
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ],
     "functions": {
