@@ -4,5 +4,21 @@
             "source": "/(.*)",
             "destination": "/index.html"
         }
-    ]
+    ],
+    "routes": [
+        {
+            "src": "/api/saveScore",
+            "dest": "/src/api/saveScore.js"
+        },
+        {
+            "src": "/api/getScores",
+            "dest": "/src/api/getScores.js"
+        }
+    ],
+    "functions": {
+        "src/api/*.js": {
+            "memory": 1024,
+            "maxDuration": 10
+        }
+    }
 }
