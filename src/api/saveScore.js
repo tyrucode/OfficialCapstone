@@ -1,17 +1,18 @@
-const mongoose = require('mongoose');
+
 const HighScore = require('../../models/HighScore');
 import { connectToDatabase } from '../lib/connectToDatabase';
 
 connectToDatabase();
+
 export default async function handler(req, res) {
     // Enable CORS
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-    );
+    // res.setHeader('Access-Control-Allow-Credentials', true);
+    // res.setHeader('Access-Control-Allow-Origin', '*');
+    // res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    // res.setHeader(
+    //     'Access-Control-Allow-Headers',
+    //     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    // );
 
     // Handle OPTIONS method
     if (req.method === 'OPTIONS') {
@@ -31,21 +32,6 @@ export default async function handler(req, res) {
     }
 
     try {
-        const uri = process.env.MONGODB_URI;
-        const dbName = process.env.DB_NAME;
-
-        if (!uri) {
-            throw new Error('MONGODB_URI not defined');
-        }
-
-        // If we're running in Vercel, we need to use the connection approach
-        // If we're running in Express, we can use the existing connection
-        if (!mongoose.connection || mongoose.connection.readyState !== 1) {
-            await connectToDatabase(uri);
-        }
-
-        // Use the correct database
-        const db = mongoose.connection.useDb(dbName, { useCache: true });
 
         // Make sure the HighScore model is registered with this db connection
         const HighScoreModel = db.model('HighScore', HighScore.schema);
