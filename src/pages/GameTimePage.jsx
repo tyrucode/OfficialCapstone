@@ -24,7 +24,7 @@ function GameTimePage() {
     const [isPremium, setIsPremium] = useState(false); //making sure nonpremium users cant play
     const [playerReady, setPlayerReady] = useState(false); //seeing if game is ready
     const [score, setScore] = useState(0); //user score
-
+    const [savingScore, setSavingScore] = useState(false); // Track score saving state
 
     // state for the audio player
     const [isPlaying, setIsPlaying] = useState(false);
@@ -166,7 +166,41 @@ function GameTimePage() {
         };
     }, [playlistId, navigate]);
 
+    // Save high score to the database
+    const saveHighScore = async (scoreValue) => {
+        if (!user || savingScore) return;
 
+        try {
+            setSavingScore(true);
+
+            const response = await fetch('/api/saveScore', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: user.id,
+                    username: user.display_name,
+                    profilePicture: user.images?.length > 0 ? user.images[0].url : '',
+                    score: scoreValue,
+                    playlistId: playlistId
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save score');
+            }
+
+            const result = await response.json();
+            console.log('Score saved successfully:', result);
+
+        } catch (error) {
+            console.error('Error saving score:', error);
+            setFeedback(`${feedback} (Score saving failed)`);
+        } finally {
+            setSavingScore(false);
+        }
+    };
 
     // controls for audio
     const togglePlay = async () => {
@@ -203,10 +237,15 @@ function GameTimePage() {
             //let user know they won
             setFeedback(`Correct! The song is "${currentTrack.name}" by ${currentTrack.artists[0].name}.`);
             //update user score
-            setScore(score + 100);
+            const newScore = score + 100;
+            setScore(newScore);
             //pause audio
             spotifyPlayer.pausePlayback();
             setIsPlaying(false);
+
+            // Save the high score when user wins
+            saveHighScore(newScore);
+
         } else {
             // if they're wrong they lose 1 life
             const newGuessesLeft = guessesLeft - 1;

@@ -20,6 +20,10 @@ const highScoreSchema = new mongoose.Schema({
     timestamp: {
         type: Date,
         default: Date.now
+    },
+    playlistId: {
+        type: String,
+        default: ''
     }
 });
 
