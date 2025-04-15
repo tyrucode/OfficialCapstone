@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const HighScore = require('../src/models/HighScore');
+const HighScore = require('../../models/HighScore');
 
 let cachedDb = null;
 
