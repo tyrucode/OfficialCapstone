@@ -1,4 +1,17 @@
 {
+    "builds": [
+        {
+            "src": "src/api/*.js",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "package.json",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "dist"
+            }
+        }
+    ],
     "rewrites": [
         {
             "source": "/(.*)",
@@ -8,11 +21,15 @@
     "routes": [
         {
             "src": "/api/saveScore",
-            "dest": "/src/api/saveScore.js"
+            "dest": "src/api/saveScore.js"
         },
         {
             "src": "/api/getScores",
-            "dest": "/src/api/getScores.js"
+            "dest": "src/api/getScores.js"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/"
         }
     ],
     "functions": {

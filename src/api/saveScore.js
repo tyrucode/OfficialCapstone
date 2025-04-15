@@ -57,11 +57,20 @@ export default async function handler(req, res) {
             throw new Error('MONGODB_URI not defined');
         }
 
-        await connectToDatabase(uri);
-        mongoose.connection.useDb(dbName);
+        // If we're running in Vercel, we need to use the connection approach
+        // If we're running in Express, we can use the existing connection
+        if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+            await connectToDatabase(uri);
+        }
+
+        // Use the correct database
+        const db = mongoose.connection.useDb(dbName, { useCache: true });
+
+        // Make sure the HighScore model is registered with this db connection
+        const HighScoreModel = db.model('HighScore', HighScore.schema);
 
         // Create the high score document
-        const highScore = new HighScore({
+        const highScore = new HighScoreModel({
             userId,
             username,
             profilePicture: profilePicture || '',

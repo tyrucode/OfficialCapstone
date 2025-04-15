@@ -53,8 +53,17 @@ export default async function handler(req, res) {
             throw new Error('MONGODB_URI not defined');
         }
 
-        await connectToDatabase(uri);
-        mongoose.connection.useDb(dbName);
+        // If we're running in Vercel, we need to use the connection approach
+        // If we're running in Express, we can use the existing connection
+        if (!mongoose.connection || mongoose.connection.readyState !== 1) {
+            await connectToDatabase(uri);
+        }
+
+        // Use the correct database
+        const db = mongoose.connection.useDb(dbName, { useCache: true });
+
+        // Make sure the HighScore model is registered with this db connection
+        const HighScoreModel = db.model('HighScore', HighScore.schema);
 
         let query = {};
 
@@ -69,7 +78,7 @@ export default async function handler(req, res) {
         }
 
         // Get high scores, sorted by score (descending)
-        const highScores = await HighScore.find(query)
+        const highScores = await HighScoreModel.find(query)
             .sort({ score: -1 })
             .limit(parseInt(limit))
             .exec();
