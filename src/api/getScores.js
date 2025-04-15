@@ -1,26 +1,9 @@
 const mongoose = require('mongoose');
 const HighScore = require('../../models/HighScore');
+import { connectToDatabase } from '../lib/connectToDatabase';
 
-let cachedDb = null;
 
-async function connectToDatabase(uri) {
-    if (cachedDb) {
-        return cachedDb;
-    }
-
-    try {
-        const client = await mongoose.connect(uri, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-
-        cachedDb = client;
-        return cachedDb;
-    } catch (error) {
-        console.error('MongoDB connection error:', error);
-        throw error;
-    }
-}
+connectToDatabase();
 
 export default async function handler(req, res) {
     // Enable CORS
