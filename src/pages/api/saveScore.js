@@ -1,4 +1,4 @@
-import { connectToDatabase } from '../lib/connectToDatabase';
+import { connectToDatabase } from '../../lib/connectToDatabase';
 const mongoose = require('mongoose');
 const HighScore = require('../../models/HighScore');
 
