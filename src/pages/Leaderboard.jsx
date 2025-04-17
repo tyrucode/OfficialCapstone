@@ -17,6 +17,8 @@ function Leaderboard() {
     const [activeTab, setActiveTab] = useState('global'); // 'global' or 'personal'
 
     useEffect(() => {
+        // In your Leaderboard.jsx component
+        // Update the fetchScores function
         const fetchScores = async () => {
             setLoading(true);
             setError(null);
@@ -29,8 +31,11 @@ function Leaderboard() {
                 }
                 queryParams.append('limit', 20);
 
+                // Use absolute URL
+                const apiUrl = `${window.location.origin}/api/getScores?${queryParams.toString()}`;
+
                 // Fetch global scores
-                const globalResponse = await fetch(`/api/getScores?${queryParams.toString()}`);
+                const globalResponse = await fetch(apiUrl);
 
                 if (!globalResponse.ok) {
                     throw new Error(`Failed to fetch global scores: ${globalResponse.statusText}`);
@@ -44,7 +49,8 @@ function Leaderboard() {
                     queryParams.append('userId', user.id);
                     queryParams.append('type', 'personal');
 
-                    const userResponse = await fetch(`/api/getScores?${queryParams.toString()}`);
+                    const userApiUrl = `${window.location.origin}/api/getScores?${queryParams.toString()}`;
+                    const userResponse = await fetch(userApiUrl);
 
                     if (!userResponse.ok) {
                         throw new Error(`Failed to fetch user scores: ${userResponse.statusText}`);

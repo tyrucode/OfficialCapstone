@@ -1,7 +1,20 @@
-// pages/api/getScores.js
-import clientPromise from '../../lib/connectToDatabase';
-
+// src/pages/api/getScores.js
 export default async function handler(req, res) {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
+    // Handle OPTIONS method
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
     if (req.method !== 'GET') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -10,7 +23,13 @@ export default async function handler(req, res) {
     const { playlistId, limit = 10, type = 'all', userId } = req.query;
 
     try {
-        const client = await clientPromise;
+        // Import MongoDB client dynamically
+        const { MongoClient } = require('mongodb');
+
+        // Connect to MongoDB 
+        const client = new MongoClient(process.env.MONGODB_URI);
+        await client.connect();
+
         const db = client.db("Guessify");
         const collection = db.collection("highscores");
 
@@ -21,7 +40,7 @@ export default async function handler(req, res) {
             query.playlistId = playlistId;
         }
 
-        // For personal best, you'd need to add userId to the query
+        // For personal best
         if (type === 'personal' && userId) {
             query.userId = userId;
         }
@@ -31,6 +50,9 @@ export default async function handler(req, res) {
             .sort({ score: -1 })
             .limit(parseInt(limit))
             .toArray();
+
+        // Close connection
+        await client.close();
 
         res.status(200).json({ success: true, highScores });
     } catch (error) {

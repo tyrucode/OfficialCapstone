@@ -173,7 +173,11 @@ function GameTimePage() {
         try {
             setSavingScore(true);
 
-            const response = await fetch('/api/saveScore', {
+            // Use absolute URL to ensure correct endpoint
+            const apiUrl = window.location.origin + '/api/saveScore';
+            console.log("Sending score to:", apiUrl);
+
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -188,7 +192,9 @@ function GameTimePage() {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to save score');
+                const errorText = await response.text();
+                console.error("Error response:", errorText);
+                throw new Error(`Failed to save score: ${response.status} ${response.statusText}`);
             }
 
             const result = await response.json();
@@ -196,7 +202,7 @@ function GameTimePage() {
 
         } catch (error) {
             console.error('Error saving score:', error);
-            setFeedback(`${feedback} (Score saving failed)`);
+            setFeedback(`${feedback} (Score saving failed: ${error.message})`);
         } finally {
             setSavingScore(false);
         }
