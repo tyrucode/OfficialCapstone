@@ -1,8 +1,8 @@
-import { connectToDatabase } from "../../lib/connectToDatabase";
+import { clientPromise } from "../../lib/mongodb";
 
 export default async function handler(req, res) {
     try {
-        const { mongoClient } = await connectToDatabase();
+        const mongoClient = await clientPromise();
         const db = mongoClient.db("Guessify");
         const results = db.find({})
         response.status(200).json(results);
