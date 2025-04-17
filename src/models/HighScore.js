@@ -1,35 +1,13 @@
-const mongoose = require('mongoose');
+// models/HighScore.js
+// This isn't a true Mongoose model anymore, but a schema definition that we'll use with MongoDB
 
-const highScoreSchema = new mongoose.Schema({
-    userId: {
-        type: String,
-        required: true,
-    },
-    username: {
-        type: String,
-        required: true,
-    },
-    profilePicture: {
-        type: String,
-        default: '',
-    },
-    score: {
-        type: Number,
-        required: true,
-    },
-    timestamp: {
-        type: Date,
-        default: Date.now
-    },
-    playlistId: {
-        type: String,
-        default: ''
-    }
-});
+const highScoreSchema = {
+    userId: String,
+    username: String,
+    profilePicture: String,
+    score: Number,
+    timestamp: { type: Date, default: Date.now },
+    playlistId: String
+};
 
-// Index for efficiently retrieving top scores
-highScoreSchema.index({ score: -1 });
-
-const HighScore = mongoose.model('HighScore', highScoreSchema);
-
-module.exports = HighScore;
+export default highScoreSchema;

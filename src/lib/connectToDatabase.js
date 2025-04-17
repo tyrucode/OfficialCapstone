@@ -1,38 +1,26 @@
-import dotenv from 'dotenv';
 import { MongoClient } from "mongodb";
 
-// Load environmental variables from .env
-dotenv.config();
-
+// Connection string
 const uri = process.env.MONGODB_URI;
-const options = {};
+const options = {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+};
 
-// Global client reference to maintain connection across function calls
-let client = null;
-let dbInstance = null;
+let client;
+let clientPromise;
 
-export async function connectToDatabase() {
-    if (!uri) {
-        console.error('MONGODB_URI is not defined in environment variables');
-        return null;
-    }
-
-    // If we already have a connection, return it
-    if (client && dbInstance) {
-        return { client, db: dbInstance };
-    }
-
-    try {
+// In development, use a global variable so that the value
+// is preserved across module reloads caused by HMR (Hot Module Replacement).
+if (process.env.NODE_ENV === "development") {
+    if (!global._mongoClientPromise) {
         client = new MongoClient(uri, options);
-        await client.connect();
-        dbInstance = client.db(); // Store the database instance
-        console.log('Database connection successful!');
-        return { client, db: dbInstance };
-    } catch (e) {
-        console.error('Database connection failed:', e);
-        return null;
+        global._mongoClientPromise = client.connect();
     }
+    clientPromise = global._mongoClientPromise;
+} else {
+    client = new MongoClient(uri, options);
+    clientPromise = client.connect();
 }
 
-// Export the client and db for direct access if needed
-export { client, dbInstance as db };
+export default clientPromise;

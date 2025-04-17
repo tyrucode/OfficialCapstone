@@ -1,32 +1,35 @@
 // pages/api/saveScore.js
-import { connectToDatabase } from '../../lib/connectToDatabase';
-import HighScore from '../../models/HighScore';
+import clientPromise from '../../lib/connectToDatabase';
 
 export default async function handler(req, res) {
-    // Only allow POST requests
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        // Connect to the database
-        await connectToDatabase();
+        const client = await clientPromise;
+        const db = client.db("Guessify");
+        const collection = db.collection("highscores");
 
         const { userId, username, profilePicture, score, playlistId } = req.body;
 
         // Create a new high score
-        const newScore = new HighScore({
+        const newScore = {
             userId,
             username,
             profilePicture,
             score,
-            playlistId
-        });
+            playlistId,
+            timestamp: new Date()
+        };
 
         // Save to database
-        await newScore.save();
+        const result = await collection.insertOne(newScore);
 
-        return res.status(200).json({ success: true, id: newScore._id });
+        return res.status(200).json({
+            success: true,
+            id: result.insertedId
+        });
     } catch (error) {
         console.error('Error saving score:', error);
         return res.status(500).json({ error: 'Failed to save score' });
