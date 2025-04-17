@@ -1,15 +1,4 @@
 {
-    "headers": [
-        {
-            "source": "/assets/(.*).js",
-            "headers": [
-                {
-                    "key": "Content-Type",
-                    "value": "application/javascript"
-                }
-            ]
-        }
-    ],
     "version": 2,
     "routes": [
         {
