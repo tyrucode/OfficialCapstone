@@ -1,18 +1,20 @@
+// pages/api/saveScore.js
 import { connectToDatabase } from '../../lib/connectToDatabase';
 import HighScore from '../../models/HighScore';
 
 export default async function handler(req, res) {
+    // Only allow POST requests
     if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Method not allowed' });
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        // Ensure database connection is established
+        // Connect to the database
         await connectToDatabase();
 
         const { userId, username, profilePicture, score, playlistId } = req.body;
 
-        // Create a new high score using the Mongoose model
+        // Create a new high score
         const newScore = new HighScore({
             userId,
             username,
@@ -21,7 +23,7 @@ export default async function handler(req, res) {
             playlistId
         });
 
-        // Save the new score
+        // Save to database
         await newScore.save();
 
         return res.status(200).json({ success: true, id: newScore._id });
