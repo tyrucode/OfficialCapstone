@@ -166,48 +166,6 @@ function GameTimePage() {
         };
     }, [playlistId, navigate]);
 
-    // Save high score to the database
-    const saveHighScore = async (scoreValue) => {
-        if (!user || savingScore) return;
-
-        try {
-            setSavingScore(true);
-
-            // Use absolute URL to ensure correct endpoint
-            const apiUrl = window.location.origin + '/api/saveScore';
-            console.log("Sending score to:", apiUrl);
-
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    userId: user.id,
-                    username: user.display_name,
-                    profilePicture: user.images?.length > 0 ? user.images[0].url : '',
-                    score: scoreValue,
-                    playlistId: playlistId
-                }),
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Error response:", errorText);
-                throw new Error(`Failed to save score: ${response.status} ${response.statusText}`);
-            }
-
-            const result = await response.json();
-            console.log('Score saved successfully:', result);
-
-        } catch (error) {
-            console.error('Error saving score:', error);
-            setFeedback(`${feedback} (Score saving failed: ${error.message})`);
-        } finally {
-            setSavingScore(false);
-        }
-    };
-
     // controls for audio
     const togglePlay = async () => {
         if (isPlaying) {
@@ -249,8 +207,6 @@ function GameTimePage() {
             spotifyPlayer.pausePlayback();
             setIsPlaying(false);
 
-            // Save the high score when user wins
-            saveHighScore(newScore);
 
         } else {
             // if they're wrong they lose 1 life
@@ -296,14 +252,9 @@ function GameTimePage() {
         navigate('/game');
     };
 
-    // View leaderboard
+    // view leaderboard
     const viewLeaderboard = () => {
-        navigate('/leaderboard', {
-            state: {
-                playlistId,
-                playlistName
-            }
-        });
+        navigate('/leaderboard');
     };
 
     // loading screen
@@ -311,7 +262,7 @@ function GameTimePage() {
         return <div className="loading-container">Loading game...</div>;
     }
 
-    // If user doesn't have premium, show message
+    // if user doesn't have premium, show message
     if (!isPremium) {
         return (
             <div className="game-time-container">
