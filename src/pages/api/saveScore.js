@@ -1,61 +1,32 @@
 import { connectToDatabase } from '../../lib/connectToDatabase';
-const mongoose = require('mongoose');
-const HighScore = require('../../models/HighScore');
+import HighScore from '../../models/HighScore';
 
 export default async function handler(req, res) {
-    // Enable CORS
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-    );
-
-    // Handle OPTIONS method
-    if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
-    }
-
     if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-
-    const { userId, username, profilePicture, score, playlistId } = req.body;
-
-    // Validate required fields
-    if (!userId || !username || score === undefined) {
-        return res.status(400).json({ error: 'Missing required fields' });
+        return res.status(405).json({ message: 'Method not allowed' });
     }
 
     try {
-        const { db } = await connectToDatabase();
+        // Ensure database connection is established
+        await connectToDatabase();
 
-        // Make sure the HighScore model is registered with this db connection
-        let HighScoreModel;
-        try {
-            HighScoreModel = mongoose.model('HighScore');
-        } catch (e) {
-            HighScoreModel = mongoose.model('HighScore', HighScore.schema);
-        }
+        const { userId, username, profilePicture, score, playlistId } = req.body;
 
-        // Create the high score document
-        const highScore = new HighScoreModel({
+        // Create a new high score using the Mongoose model
+        const newScore = new HighScore({
             userId,
             username,
-            profilePicture: profilePicture || '',
+            profilePicture,
             score,
-            playlistId, // Optional field to track scores by playlist
-            timestamp: new Date()
+            playlistId
         });
 
-        // Save to database
-        await highScore.save();
+        // Save the new score
+        await newScore.save();
 
-        res.status(201).json({ success: true, highScore });
+        return res.status(200).json({ success: true, id: newScore._id });
     } catch (error) {
-        console.error('Error saving high score:', error);
-        res.status(500).json({ error: 'Failed to save high score', message: error.message });
+        console.error('Error saving score:', error);
+        return res.status(500).json({ error: 'Failed to save score' });
     }
 }
