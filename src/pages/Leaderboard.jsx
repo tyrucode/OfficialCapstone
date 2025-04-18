@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import clientPromise from "../lib/mongodb"
+import clientPromise from "../../api/lib/mongodb"
 
 function Leaderboard({ isConnected }) {
     const [scores, setScores] = useState();

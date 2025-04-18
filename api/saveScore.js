@@ -1,4 +1,4 @@
-import clientPromise from "../../lib/mongodb";
+import clientPromise from "../src/lib/mongodb";
 
 export default async function handler(req, res) {
     // Only allow POST requests
