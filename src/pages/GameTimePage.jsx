@@ -25,6 +25,8 @@ function GameTimePage() {
     const [playerReady, setPlayerReady] = useState(false); //seeing if game is ready
     const [score, setScore] = useState(0); //user score
     const [savingScore, setSavingScore] = useState(false); // Track score saving state
+    const [showUsernameInput, setShowUsernameInput] = useState(false);
+    const [username, setUsername] = useState("");
 
     // state for the audio player
     const [isPlaying, setIsPlaying] = useState(false);
@@ -177,7 +179,41 @@ function GameTimePage() {
         }
         setIsPlaying(!isPlaying);
     };
+    const saveScore = async () => {
+        if (!username.trim()) {
+            setFeedback("Please enter a username to save your score.");
+            return;
+        }
 
+        try {
+            setSavingScore(true);
+
+            const response = await fetch('/api/saveScore', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username.trim(),
+                    score,
+                    playlistId,
+                    playlistName
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save score');
+            }
+
+            setSavingScore(false);
+            setFeedback("Score saved successfully!");
+            setShowUsernameInput(false);
+        } catch (error) {
+            console.error("Error saving score:", error);
+            setSavingScore(false);
+            setFeedback("Failed to save score. Please try again.");
+        }
+    };
     // volume changer controls
     const handleVolumeChange = (e) => {
         const volume = e.target.value;
@@ -215,10 +251,10 @@ function GameTimePage() {
             //logic for a loss
             if (newGuessesLeft === 0) {
                 setGameStatus('lost');
-                setFeedback(`Game over! The song was "${currentTrack.name}" by ${currentTrack.artists[0].name}. LOSER`);
+                setFeedback(`Game over! The song was "${currentTrack.name}" by ${currentTrack.artists[0].name}.`);
                 spotifyPlayer.pausePlayback();
                 setIsPlaying(false);
-                setScore(0);
+                setShowUsernameInput(true);
             } else {
                 setFeedback(`Wrong guess! You have ${newGuessesLeft} guesses left.`);
             }
@@ -333,6 +369,24 @@ function GameTimePage() {
                 </form>
             ) : (
                 <div className="game-over-controls">
+                    {showUsernameInput && (
+                        <div className="username-input-container">
+                            <input
+                                type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder="Enter your username"
+                                className="username-input"
+                                maxLength={20}
+                            />
+                            <button
+                                onClick={saveScore}
+                                disabled={savingScore || !username.trim()}
+                            >
+                                {savingScore ? 'Saving...' : 'Save Score'}
+                            </button>
+                        </div>
+                    )}
                     <button onClick={playNewGame}>Play Again</button>
                     <button onClick={viewLeaderboard}>View Leaderboard</button>
                 </div>
