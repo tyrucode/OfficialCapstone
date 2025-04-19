@@ -33,7 +33,6 @@ function RootLayout() {
                     <NavLink to='/'>Home<HomeIcon /></NavLink>
                     <NavLink to='game'>Play</NavLink>
                     <NavLink to='leaderboard'>Leaderboard</NavLink>
-                    <NavLink to='dbtest'>DBTEST</NavLink>
                     {!user ? (
                         <a href="#" onClick={handleSpotifyLogin}>Sign In!<LockSharpIcon /></a>
                     ) : (

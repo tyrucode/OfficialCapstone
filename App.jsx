@@ -7,8 +7,6 @@ import SpotifyCallback from "./src/pages/SpotifyCallback"
 import NotFound from "./src/pages/NotFound"
 import GameTimePage from "./src/pages/GameTimePage"
 import Leaderboard from "./src/pages/Leaderboard"
-
-import DbTest from "./src/pages/DbTest"
 // layouts
 import RootLayout from "./src/layouts/RootLayout"
 // context
@@ -23,9 +21,6 @@ const router = createBrowserRouter(
       <Route path="callback" element={<SpotifyCallback />} />
       <Route path="gametime" element={<GameTimePage />} />
       <Route path="leaderboard" element={<Leaderboard />} />
-
-      <Route path='dbtest' element={<DbTest />} />
-
       <Route path="*" element={<NotFound />} />
     </Route>
   )
