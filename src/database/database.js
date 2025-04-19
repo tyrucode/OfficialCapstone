@@ -1,13 +1,9 @@
-
+// src/database/database.js
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-
-// Load .env variables
-dotenv.config();
 
 export default async function connectToDb() {
-    const uri = process.env.MONGODB_URI;
-    const dbName = process.env.DB_NAME;
+    const uri = import.meta.env.VITE_MONGODB_URI;
+    const dbName = import.meta.env.VITE_DB_NAME;
 
     if (!uri) {
         console.error('MONGODB_URI is not defined in environment variables');
@@ -22,5 +18,4 @@ export default async function connectToDb() {
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
     }
-
 }
