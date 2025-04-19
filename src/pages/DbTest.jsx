@@ -1,14 +1,10 @@
-import dotenv from 'dotenv';
+
 import mongoose from 'mongoose';
 
-//load enviornmental variables from .env
-dotenv.config();
 
 const uri = process.env.MONGODB_URI;
-const options = {};
 
 function DbTest() {
-
 
     const connectToDb = async function () {
         if (!uri) {
