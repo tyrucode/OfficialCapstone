@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { MongoClient } from "mongodb";
+const mongoose = require('mongoose');
 
 //load enviornmental variables from .env
 dotenv.config();
@@ -17,17 +17,12 @@ function DbTest() {
         }
 
         try {
-            const client = new MongoClient(uri, options);
-            const db = await client.connect();
-            console.log('Connection successful!');
-
-            const collections = await client.db().listCollections().toArray();
-            console.log('Collections in database:', collections.map(c => c.name));
-
-            await client.close();
-        } catch (e) {
-            console.error('Connection failed:', e);
+            await mongoose.connect(process.env.MONGODB_URI);
+            console.log('Connected to MongoDB');
+        } catch (error) {
+            console.error('Error connecting to MongoDB:', error);
         }
+
     }
 
 
