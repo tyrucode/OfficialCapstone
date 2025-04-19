@@ -1,7 +1,6 @@
 
 import mongoose from 'mongoose';
-const dotenv = require(['dotenv'])
-
+import { dotenv } from 'dotenv/config'
 //load enviornmental variables from .env
 dotenv.config();
 
