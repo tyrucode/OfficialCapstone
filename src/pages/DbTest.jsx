@@ -1,9 +1,9 @@
 
 import mongoose from 'mongoose';
-const dotenv = require('dotenv');
-dotenv.config({ path: './config.env' });
-const app = require('./app');
-const DB = process.env.DATABASE;  // this is your database URL your env name can be different. In this case it is DATABASE
+const dotenv = require(['dotenv'])
+
+//load enviornmental variables from .env
+dotenv.config();
 
 console.log('Database URI:', DB);
 
