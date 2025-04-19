@@ -1,7 +1,6 @@
 
 import mongoose from 'mongoose';
-//load enviornmental variables from .env
-dotenv.config();
+require('dotenv').config()
 
 console.log('Database URI:', DB);
 
