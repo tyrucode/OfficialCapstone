@@ -1,7 +1,7 @@
 // Base API URL - adjust based on your environment
 const API_URL = import.meta.env.MODE === 'development'
-    ? 'http://localhost:5173/api'
-    : '/api'; // In production, the API will be under the same domain
+    ? 'http://localhost:5000/api'
+    : '/api';// In production, the API will be under the same domain
 
 // Save user score
 export const saveUserScore = async (userData) => {
