@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { spotifyPlayer } from '../services/spotifyPlayer';
 import { useUser } from '../context/UserContext';
 
+import { saveUserScore } from '../services/apiService';
+
 function GameTimePage() {
     // location/nav to get playlist that was selected
     const location = useLocation();
@@ -183,7 +185,7 @@ function GameTimePage() {
     };
 
     // function for submissions
-    const handleGuess = (e) => {
+    const handleGuess = async function (e) {
         //dont refresh when pressed
         e.preventDefault();
         //error handling
@@ -205,6 +207,19 @@ function GameTimePage() {
             spotifyPlayer.pausePlayback();
             setIsPlaying(false);
 
+            // Save the score to the database if user is logged in
+            if (user) {
+                try {
+                    await saveUserScore({
+                        spotifyId: user.id,
+                        displayName: user.display_name,
+                        profileImage: user.images && user.images.length > 0 ? user.images[0].url : null,
+                        score: newScore
+                    });
+                } catch (error) {
+                    console.error("Error saving score:", error);
+                }
+            }
 
         } else {
             // if they're wrong they lose 1 life
