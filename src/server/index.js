@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors({
     origin: ['http://localhost:5173', 'https://official-capstone.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Explicitly allow your HTTP methods
     credentials: true
 }));
 app.use(express.json());
