@@ -7,9 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "server": "node server/index.js",
-    "dev:full": "concurrently \"npm run dev\" \"npm run server\""
+    "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -17,10 +15,10 @@
     "@mui/icons-material": "^6.4.8",
     "@mui/material": "^6.4.8",
     "@vercel/analytics": "^1.5.0",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
-    "express": "^4.19.2",
+    "express": "^5.1.0",
     "mongoose": "^8.13.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
