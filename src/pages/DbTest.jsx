@@ -1,12 +1,11 @@
 
 import mongoose from 'mongoose';
-import { dotenv } from 'dotenv/config'
 //load enviornmental variables from .env
 dotenv.config();
 
 console.log('Database URI:', DB);
 
-const uri = process.env.MONGODB_URI;
+const uri = meta.env.MONGODB_URI;
 
 function DbTest() {
 
