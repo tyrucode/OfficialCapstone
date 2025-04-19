@@ -515,169 +515,83 @@ a {
   }
 }
 
-/* Leaderboard Styles */
-/* Leaderboard Styles - Add this to your App.css */
+/* Add this to your CSS file */
 
 .leaderboard-container {
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
 }
 
-.leaderboard-container h2 {
-  color: #1db954;
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 1.8rem;
-}
-
-.leaderboard-tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.tab-btn {
-  background-color: #212121;
-  color: white;
-  border: 2px solid #535353;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.2s ease;
-}
-
-.tab-btn:first-child {
-  border-radius: 4px 0 0 4px;
-}
-
-.tab-btn:last-child {
-  border-radius: 0 4px 4px 0;
-}
-
-.tab-btn.active {
-  background-color: #1db954;
-  border-color: #1db954;
-}
-
-.tab-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.leaderboard-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  background-color: #212121;
+.leaderboard {
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.leaderboard-table th,
-.leaderboard-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #444;
-}
-
-.leaderboard-table th {
-  background-color: #333;
-  color: #1db954;
+.leaderboard-header {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px;
+  padding: 15px;
   font-weight: bold;
+  background-color: #1db954;
+  color: white;
+  text-align: left;
 }
 
-.leaderboard-table tr:last-child td {
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px;
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  align-items: center;
+}
+
+.leaderboard-row:last-child {
   border-bottom: none;
 }
 
-.leaderboard-table tr:hover {
-  background-color: #2a2a2a;
+.leaderboard-row:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-.highlight-row {
-  background-color: rgba(29, 185, 84, 0.1);
+.rank {
+  font-weight: bold;
+  text-align: center;
 }
 
-.player-cell {
+.player {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.player-avatar {
+.player-image {
   width: 30px;
   height: 30px;
   border-radius: 50%;
   object-fit: cover;
 }
 
+.score {
+  font-weight: bold;
+  text-align: right;
+}
+
 .no-scores {
   text-align: center;
-  padding: 40px 0;
-  color: #b3b3b3;
-  background-color: #212121;
-  border-radius: 8px;
-  margin-top: 20px;
-  box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
+  padding: 30px;
+  color: #999;
+  font-style: italic;
 }
 
-.leaderboard-actions {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 30px;
+.loading-container,
+.error-message {
+  text-align: center;
+  padding: 30px;
 }
 
-.leaderboard-actions button {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 30px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.play-btn {
-  background-color: #1db954;
-  color: white;
-}
-
-.play-btn:hover {
-  background-color: #1ed760;
-  transform: translateY(-2px);
-}
-
-.back-btn {
-  background-color: #535353;
-  color: white;
-}
-
-.back-btn:hover {
-  background-color: #6b6b6b;
-  transform: translateY(-2px);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-
-  .leaderboard-table th,
-  .leaderboard-table td {
-    padding: 8px 10px;
-    font-size: 0.9rem;
-  }
-
-  .player-avatar {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-@media (max-width: 480px) {
-
-  .leaderboard-table th:nth-child(4),
-  .leaderboard-table td:nth-child(4) {
-    display: none;
-  }
+.error-message {
+  color: #ff6b6b;
 }
