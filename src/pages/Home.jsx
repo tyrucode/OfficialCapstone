@@ -1,5 +1,5 @@
 
-
+// intructions ui
 function Home() {
     return (
         <div>
@@ -21,8 +21,6 @@ function Home() {
                     <br />
                     Try to guess the song based on a snippet in under three guesses
                 </div>
-
-
             </div>
             <h1>A Spotify Premium subscription is required to play this game.</h1>
         </div>

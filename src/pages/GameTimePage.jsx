@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { spotifyPlayer } from '../services/spotifyPlayer';
-import { useUser } from '../context/UserContext';
+import { useUser } from '../context/UserContext'; //context
 
-import { saveUserScore } from '../services/apiService';
+import { saveUserScore } from '../services/apiService'; // function to save scores to db
 
 function GameTimePage() {
-    // location/nav to get playlist that was selected
-    const location = useLocation();
+    const location = useLocation(); //access route location and state passed in
     const navigate = useNavigate();
-    const { user } = useUser();
+    const { user } = useUser(); //get user info from context
 
-    // getting playlist name/id/image from location.state
+    // getting playlist name/id from location.state
     const { playlistId, playlistName } = location.state || {};
 
     // all state to load the game itself
@@ -47,7 +46,7 @@ function GameTimePage() {
                 });
                 // error handling
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch user data: ${response.status}`);
+                    throw new Error(`failed to fetch user data: ${response.status}`);
                 }
                 //getting users data
                 const userData = await response.json();
@@ -56,7 +55,7 @@ function GameTimePage() {
                 setIsPremium(hasPremium);
                 //if no premium dont allow game access
                 if (!hasPremium) {
-                    setFeedback("Spotify Premium is required to play this game. Please upgrade your Spotify account.");
+                    setFeedback("Spotify Premium is required to play this game.");
                     setLoading(false);
                     return false;
                 }
@@ -64,8 +63,8 @@ function GameTimePage() {
                 return true; //true meaning they do have premium
                 //error handling
             } catch (error) {
-                console.error("Error checking subscription:", error);
-                setFeedback(`Error: ${error.message}. Please try again.`);
+                console.error("error checking subscription:", error);
+                setFeedback(`error: ${error.message}. try again.`);
                 setLoading(false);
                 return false;
             }
@@ -77,6 +76,7 @@ function GameTimePage() {
                 setPlayerReady(true);
                 return true;
             } catch (error) {
+                // e handle
                 console.error("failed to initialize the player:", error);
                 setFeedback(`error: ${error.message}. please refresh or try again.`);
                 setLoading(false);
@@ -207,7 +207,7 @@ function GameTimePage() {
             spotifyPlayer.pausePlayback();
             setIsPlaying(false);
 
-            // Save the score to the database if user is logged in
+            // Save the score alongside user info to the database if user is logged in
             if (user) {
                 try {
                     await saveUserScore({
@@ -289,10 +289,11 @@ function GameTimePage() {
             </div>
         );
     }
-
+    // ui
     return (
         <div className="game-time-container">
             <div className="selected-playlist">
+                {/* if it has a image show it */}
                 {playlistImage && (
                     <img
                         src={playlistImage}
@@ -304,6 +305,7 @@ function GameTimePage() {
                     <div className='titleScore'>
                         <h2>{playlistName}<h2 id='userScore'>{score}</h2></h2>
                     </div>
+                    {/* if game is active show controls */}
                     {currentTrack && gameStatus === 'playing' && playerReady && (
                         <div className="audio-controls">
                             <button onClick={togglePlay}>
@@ -324,9 +326,9 @@ function GameTimePage() {
                     )}
                 </div>
             </div>
-
+            {/* if feedback message then show it */}
             {feedback && <p className="feedback-message">{feedback}</p>}
-
+            {/* if game is active then show the form to guess if not then show the controls for a game over */}
             {gameStatus === 'playing' ? (
                 <form onSubmit={handleGuess} className="guess-form">
                     <div className="guess-input-container">
@@ -350,7 +352,7 @@ function GameTimePage() {
                     <button onClick={viewLeaderboard}>View Leaderboard</button>
                 </div>
             )}
-
+            {/* nav controls */}
             <div className="game-controls">
                 <button onClick={goBack}>Choose Another Playlist</button>
             </div>

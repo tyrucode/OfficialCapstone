@@ -1,18 +1,20 @@
-import { NavLink, Outlet } from "react-router-dom"
+//mui icons
 import HomeIcon from '@mui/icons-material/Home';
 import LockSharpIcon from '@mui/icons-material/LockSharp';
 import PersonIcon from '@mui/icons-material/Person';
+//imports
+import { NavLink, Outlet } from "react-router-dom"
 import { redirectToSpotifyLogin } from "../services/spotifyAuth";
 import { useUser } from "../context/UserContext";
 import { useState } from "react";
 
 function RootLayout() {
-    const { user, logout } = useUser();
-    const [showDropdown, setShowDropdown] = useState(false);
+    const { user, logout } = useUser(); //get user data from the context
+    const [showDropdown, setShowDropdown] = useState(false); //dropdown state
     //spotify login button
     const handleSpotifyLogin = (e) => {
         e.preventDefault();
-        redirectToSpotifyLogin();
+        redirectToSpotifyLogin(); //go to spotify for auth
     }
     //login/logout dropdown state
     const toggleDropdown = () => {
@@ -33,6 +35,7 @@ function RootLayout() {
                     <NavLink to='/'>Home<HomeIcon /></NavLink>
                     <NavLink to='game'>Play</NavLink>
                     <NavLink to='leaderboard'>Leaderboard</NavLink>
+                    {/* basically showingn sign in if the user is signed in but if theyre not signed in then dont. */}
                     {!user ? (
                         <a href="#" onClick={handleSpotifyLogin}>Sign In!<LockSharpIcon /></a>
                     ) : (

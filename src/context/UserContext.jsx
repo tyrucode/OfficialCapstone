@@ -1,12 +1,12 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import { getUserProfile } from '../services/spotifyApi';
 
-const UserContext = createContext(null);
+const UserContext = createContext(null); //context for the users data
 
 export const UserProvider = ({ children }) => {
     //state for user logging
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState(null); // users profile data
+    const [loading, setLoading] = useState(true); // controls loading
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -31,9 +31,9 @@ export const UserProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('spotify_access_token');
         localStorage.removeItem('spotify_token_expiration');
-        setUser(null);
+        setUser(null); //clear state
     };
-    //context
+    //provide the context of whether user is logged in or not to the child components
     return (
         <UserContext.Provider value={{ user, loading, logout, setUser }}>
             {children}
@@ -41,4 +41,5 @@ export const UserProvider = ({ children }) => {
     );
 };
 
+//custom hook for user context
 export const useUser = () => useContext(UserContext);

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+//schema for the user data we will be saving
 const UserSchema = new mongoose.Schema({
     spotifyId: {
         type: String,
@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
 });
 //
 
-// Create or use existing model
+// create/retrieve the user model and if it doesnt exist create a new one
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 export default User;
