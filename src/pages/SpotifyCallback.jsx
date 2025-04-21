@@ -47,7 +47,7 @@ function SpotifyCallback() {
                     parsedHash: hash
                 }));
 
-                // clear the has from the url
+                // clear the hash from the url
                 window.location.hash = '';
                 //if it is correct log in and take us to game page
                 if (hash.access_token) {
@@ -107,8 +107,6 @@ function SpotifyCallback() {
                     <h3>info for debugging</h3>
                     <p><strong>url currently:</strong> {debugInfo.url}</p>
                     <p><strong>current url hash:</strong> {debugInfo.hash || '[empty]'}</p>
-                    <h4>hash data:</h4>
-                    <p>{JSON.stringify(debugInfo.parsedHash, null, 2)}</p>
                     {/* debug info */}
                     {debugInfo.error && (
                         <div style={{ color: 'red' }}>

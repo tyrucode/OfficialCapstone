@@ -16,7 +16,7 @@ function Game() {
         if (token && expirationTime && currentTime < expirationTime) {
             setIsAuthenticated(true);
         } else {
-            // if tokens missing/expired do this
+            // if tokens missing/expired do this and remove them from the page
             localStorage.removeItem('spotify_access_token');
             localStorage.removeItem('spotify_token_expiration');
             // Redirect to home page if not authenticated
@@ -26,11 +26,10 @@ function Game() {
 
     return (
         <div>
+            {/* if theyre authenticated show the playlist if not show loading (then they will be redirected above) */}
             {isAuthenticated ? (
                 <>
                     <h2>To start, choose a playlist!</h2>
-                    {/* most likely will be a component kinda thing */}
-                    {/* Playlist selection and game content will go here */}
                     <PlaylistGrid />
                 </>
             ) : (
