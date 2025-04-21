@@ -8,12 +8,12 @@ import * as spotifyApi from '../services/spotifyApi';
 import { useUser } from '../context/UserContext';
 import { act } from 'react-dom/test-utils';
 
-// Mock the API service
+// mock api
 jest.mock('../services/spotifyApi', () => ({
     getUserProfile: jest.fn()
 }));
 
-// Mock localStorage
+// mock local storage
 const localStorageMock = {
     getItem: jest.fn(),
     removeItem: jest.fn(),
@@ -21,7 +21,7 @@ const localStorageMock = {
 };
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
-// Test component that uses the context
+// test component that uses context
 const TestComponent = () => {
     const { user, loading, logout } = useUser();
 
@@ -47,14 +47,14 @@ describe('UserContext', () => {
     });
 
     test('should show loading state initially', () => {
-        // Mock valid token but slow API response
+        // mock a working token but a slow api resposne
         localStorageMock.getItem.mockImplementation((key) => {
             if (key === 'spotify_access_token') return 'fake-token';
             if (key === 'spotify_token_expiration') return String(new Date().getTime() + 3600000);
             return null;
         });
 
-        spotifyApi.getUserProfile.mockImplementation(() => new Promise(() => { })); // Never resolves
+        spotifyApi.getUserProfile.mockImplementation(() => new Promise(() => { })); // never resolves
 
         render(
             <UserProvider>
@@ -66,14 +66,14 @@ describe('UserContext', () => {
     });
 
     test('should load user when token is valid', async () => {
-        // Mock valid token
+        // mock w working token
         localStorageMock.getItem.mockImplementation((key) => {
             if (key === 'spotify_access_token') return 'fake-token';
             if (key === 'spotify_token_expiration') return String(new Date().getTime() + 3600000);
             return null;
         });
 
-        // Mock user profile response
+        // mock the profile response
         spotifyApi.getUserProfile.mockResolvedValue({
             id: '123',
             display_name: 'Test User',
@@ -92,14 +92,14 @@ describe('UserContext', () => {
     });
 
     test('should handle logout', async () => {
-        // Mock valid token
+        // mocking a valid token
         localStorageMock.getItem.mockImplementation((key) => {
             if (key === 'spotify_access_token') return 'fake-token';
             if (key === 'spotify_token_expiration') return String(new Date().getTime() + 3600000);
             return null;
         });
 
-        // Mock user profile response
+        // mocking the users profile response
         spotifyApi.getUserProfile.mockResolvedValue({
             id: '123',
             display_name: 'Test User',
@@ -112,19 +112,19 @@ describe('UserContext', () => {
             </UserProvider>
         );
 
-        // Wait for user to load
+        // waiting for the user to load
         await waitFor(() => {
             expect(screen.getByTestId('username')).toHaveTextContent('Test User');
         });
 
-        // Click logout button
+        // clicking logout  button
         screen.getByText('Logout').click();
 
-        // Check localStorage items were removed
+        // making sure local storage items have been removed upon logout
         expect(localStorageMock.removeItem).toHaveBeenCalledWith('spotify_access_token');
         expect(localStorageMock.removeItem).toHaveBeenCalledWith('spotify_token_expiration');
 
-        // Check UI updated
+        // make sure ui gets updated as well
         await waitFor(() => {
             expect(screen.getByText('Not logged in')).toBeInTheDocument();
         });
