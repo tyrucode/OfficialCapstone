@@ -1,7 +1,8 @@
 // src/context/UserContext.test.jsx
 import { render, screen, waitFor } from '@testing-library/react';
-import { UserProvider, useUser } from './UserContext';
+import { UserProvider } from '../context/UserContext';
 import * as spotifyApi from '../services/spotifyApi';
+import { useUser } from '../context/UserContext';
 
 // Mock the API service
 jest.mock('../services/spotifyApi', () => ({

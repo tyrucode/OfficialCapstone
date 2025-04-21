@@ -1,7 +1,7 @@
 // src/components/PlaylistGrid.test.jsx
 import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import PlaylistGrid from './PlaylistGrid';
+import { BrowserRouter } from 'react-router';
+import PlaylistGrid from '../components/PlaylistGrid'
 import * as router from 'react-router';
 
 // Mock the useNavigate hook

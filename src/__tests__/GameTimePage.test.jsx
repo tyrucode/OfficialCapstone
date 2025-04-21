@@ -1,7 +1,7 @@
 // src/pages/GameTimePage.test.jsx
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import GameTimePage from './GameTimePage';
+import GameTimePage from '../pages/GameTimePage'
 import { UserProvider } from '../context/UserContext';
 import * as router from 'react-router';
 import { spotifyPlayer } from '../services/spotifyPlayer';
