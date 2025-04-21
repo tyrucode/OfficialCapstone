@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
+    // state for the not found page
     const [seconds, setSeconds] = useState(5);
     const navigate = useNavigate();
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setSeconds((prevSeconds) => {
+            setSeconds((prevSeconds) => { // take the timer and  when it hits 1 nav the user to the home page
                 if (prevSeconds === 1) {
                     clearInterval(timer); // stop the timer
                     navigate("/"); // send user home
