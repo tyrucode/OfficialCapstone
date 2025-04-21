@@ -1,4 +1,7 @@
-// src/components/PlaylistGrid.test.jsx
+import { TextEncoder, TextDecoder } from 'util'
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router';
 import PlaylistGrid from '../components/PlaylistGrid'

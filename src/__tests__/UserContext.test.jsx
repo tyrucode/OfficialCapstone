@@ -1,8 +1,12 @@
-// src/context/UserContext.test.jsx
+import { TextEncoder, TextDecoder } from 'util'
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 import { render, screen, waitFor } from '@testing-library/react';
 import { UserProvider } from '../context/UserContext';
 import * as spotifyApi from '../services/spotifyApi';
 import { useUser } from '../context/UserContext';
+import { act } from 'react-dom/test-utils';
 
 // Mock the API service
 jest.mock('../services/spotifyApi', () => ({

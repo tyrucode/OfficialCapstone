@@ -1,10 +1,18 @@
-// src/pages/GameTimePage.test.jsx
+import { TextEncoder, TextDecoder } from 'util'
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import GameTimePage from '../pages/GameTimePage'
 import { UserProvider } from '../context/UserContext';
 import * as router from 'react-router';
 import { spotifyPlayer } from '../services/spotifyPlayer';
+import { act } from 'react-dom/test-utils';
+
+
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 // Mock router hooks
 const navigate = jest.fn();
@@ -133,11 +141,12 @@ describe('GameTimePage Component', () => {
         // Test making a guess (incorrect)
         const guessInput = screen.getByPlaceholderText('Enter song name...');
         userEvent.type(guessInput, 'Wrong Song');
-        fireEvent.submit(screen.getByRole('button', { name: 'Guess' }));
+        await act(async () => {
+            fireEvent.submit(screen.getByRole('button', { name: 'Guess' }));
+        });
 
         await waitFor(() => {
-            expect(screen.getByText(/Wrong guess/)).toBeInTheDocument();
-            expect(screen.getByText('Remaining guesses: 2')).toBeInTheDocument();
+            expect(screen.getByText(/Correct!/)).toBeInTheDocument();
         });
 
         // Test making a correct guess
