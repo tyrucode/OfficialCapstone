@@ -30,9 +30,12 @@ export const UserProvider = ({ children }) => {
     }, []);
     //remove data when user is logged out
     const logout = () => {
+        // clear all spotify items from localStorage
         localStorage.removeItem('spotify_access_token');
         localStorage.removeItem('spotify_token_expiration');
-        setUser(null); //clear state
+        localStorage.removeItem('spotify_auth_state');
+        setUser(null); //clear state\
+        window.location.href = "https://accounts.spotify.com/logout"; //take user to the spotify logout page then back to home page
     };
     //provide the context of whether user is logged in or not to the child components
     return (
