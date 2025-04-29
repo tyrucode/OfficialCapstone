@@ -27,6 +27,8 @@ function GameTimePage() {
     const [score, setScore] = useState(0); //user score
     // state for the audio player
     const [isPlaying, setIsPlaying] = useState(false);
+    //creating state for the api errors
+    const [apiError, setApiError] = useState(false);
 
     // when component mounts get the playlist and initialize the game
     useEffect(() => {
@@ -168,18 +170,27 @@ function GameTimePage() {
 
     // controls for audio
     const togglePlay = async () => {
-        try {
-            if (isPlaying) {
-                await spotifyPlayer.pausePlayback();
-            } else {
-                if (currentTrack) {
+        if (isPlaying) {
+            await spotifyPlayer.pausePlayback();
+            setIsPlaying(false);
+        } else {
+            if (currentTrack) {
+                try {
                     await spotifyPlayer.playTrackSnippet(currentTrack.uri);
+                    setIsPlaying(true);
+                    // Reset API error state when successfully playing
+                    setApiError(false);
+                } catch (error) {
+                    console.error("Error playing track:", error);
+                    // Handle 404 error specifically
+                    if (error.message === 'spotify-404') {
+                        setApiError(true);
+                        setFeedback("Unable to play this track. Please refresh the page and try again. If the problem persists, try selecting a different playlist.");
+                    } else {
+                        setFeedback(`Error playing track: ${error.message}. Please try again.`);
+                    }
+                    setIsPlaying(false);
                 }
-            }
-            setIsPlaying(!isPlaying);
-        } catch (e) {
-            if (e.message = 'spotify-404') {
-                setFeedback('error with spotify api, please refresh the page. error:', e)
             }
         }
     };
