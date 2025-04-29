@@ -8,7 +8,6 @@ export const UserProvider = ({ children }) => {
     //state for user logging
     const [user, setUser] = useState(null); // users profile data
     const [loading, setLoading] = useState(true); // controls loading
-    const navigate = useNavigate();
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -34,7 +33,6 @@ export const UserProvider = ({ children }) => {
         localStorage.removeItem('spotify_access_token');
         localStorage.removeItem('spotify_token_expiration');
         setUser(null); //clear state
-        navigate('/home');
     };
     //provide the context of whether user is logged in or not to the child components
     return (
