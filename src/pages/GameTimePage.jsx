@@ -174,14 +174,14 @@ function GameTimePage() {
             if (currentTrack) {
                 try {
                     await spotifyPlayer.playTrackSnippet(currentTrack.uri);
-                }
-                catch (e) {
-                    setFeedback("unable to play the track, please refresh the page and try again. error:", e)
+                } catch (e) {
+                    setFeedback(`Unable to play the track. Please refresh the page and try again. Error: ${e.message || e}`);
                 }
             }
         }
         setIsPlaying(!isPlaying);
     };
+
 
     // volume changer controls
     const handleVolumeChange = (e) => {
