@@ -23,8 +23,9 @@ function RootLayout() {
     //logout state
     const handleLogout = (e) => {
         e.preventDefault();
-        logout();
+        //close dropdown then logout
         setShowDropdown(false);
+        logout();
     }
 
     return (

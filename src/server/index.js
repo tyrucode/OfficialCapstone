@@ -23,15 +23,18 @@ app.use(cors({
 }));
 app.use(express.json());
 // Connect to MongoDB
-const connectDB = async () => {
+// added retryCount / delay so we can attempt to rejoin if it doesnt connect the first time.
+const connectDB = async (retryCount = 5, delay = 5000) => {
     try {
         await mongoose.connect(process.env.MONGODB_URI, {
             dbName: process.env.DB_NAME
         });
         console.log('MongoDB connected');
     } catch (error) {
+        // retrying connection in 5 seconds
         console.error('Error connecting to MongoDB:', error);
-        process.exit(1);
+        console.log(`Retrying connection in ${delay / 1000} seconds...`);
+        setTimeout(() => connectDB(retryCount - 1, delay), delay);
     }
 };
 
