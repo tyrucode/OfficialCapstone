@@ -168,20 +168,21 @@ function GameTimePage() {
 
     // controls for audio
     const togglePlay = async () => {
-        if (isPlaying) {
-            await spotifyPlayer.pausePlayback();
-        } else {
-            if (currentTrack) {
-                try {
+        try {
+            if (isPlaying) {
+                await spotifyPlayer.pausePlayback();
+            } else {
+                if (currentTrack) {
                     await spotifyPlayer.playTrackSnippet(currentTrack.uri);
-                } catch (e) {
-                    setFeedback(`Unable to play the track. Please refresh the page and try again. Error: ${e.message || e}`);
                 }
             }
+            setIsPlaying(!isPlaying);
+        } catch (e) {
+            if (e.message = 'spotify-404') {
+                setFeedback('error with spotify api, please refresh the page. error:', e)
+            }
         }
-        setIsPlaying(!isPlaying);
     };
-
 
     // volume changer controls
     const handleVolumeChange = (e) => {
