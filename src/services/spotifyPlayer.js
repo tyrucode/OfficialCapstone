@@ -125,6 +125,13 @@ export class SpotifyPlayer {
                     position_ms: this.snippetStartTime
                 })
             });
+            // handle API errors - especially 404 errors
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Failed to play track: ${response.status} - spotify-404');
+                }
+            }
+
             // store the current track we are going to use
             this.currentTrackId = trackUri;
             // after the snippet is done pause the song
@@ -134,8 +141,7 @@ export class SpotifyPlayer {
             return true;
             //error handling
         } catch (error) {
-            console.error('error playing the track snippet:', error);
-            throw error;
+            throw new Error('error playing the track snippet:', error);
         }
     }
     // pause song 

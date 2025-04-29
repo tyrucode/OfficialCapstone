@@ -172,7 +172,12 @@ function GameTimePage() {
             await spotifyPlayer.pausePlayback();
         } else {
             if (currentTrack) {
-                await spotifyPlayer.playTrackSnippet(currentTrack.uri);
+                try {
+                    await spotifyPlayer.playTrackSnippet(currentTrack.uri);
+                }
+                catch (e) {
+                    setFeedback("unable to play the track, please refresh the page and try again. error:", e)
+                }
             }
         }
         setIsPlaying(!isPlaying);
