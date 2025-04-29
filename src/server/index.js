@@ -10,14 +10,18 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// get origins from enviornmental variables or allow the hard coded links.
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',')
+    : ['http://localhost:5173', 'https://official-capstone.vercel.app'];
+
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://official-capstone.vercel.app'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Explicitly allow your HTTP methods
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // explicitly allow HTTP methods
     credentials: true
 }));
 app.use(express.json());
-
 // Connect to MongoDB
 const connectDB = async () => {
     try {
@@ -33,15 +37,15 @@ const connectDB = async () => {
 
 connectDB();
 
-// Routes
+// routes
 app.use('/api/users', userRoutes);
 
-// Default route
+// default route
 app.get('/', (req, res) => {
     res.send('Guessify API is running');
 });
 
-// Start server
+// start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

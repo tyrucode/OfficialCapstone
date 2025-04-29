@@ -26,7 +26,10 @@ router.post('/update-score', async (req, res) => {
     if (!spotifyId || !displayName) { //make sure user is allowed to be here
         return res.status(400).json({ message: 'Required fields missing' });
     }
-
+    // Validate score is a number and not negative
+    if (score === NaN || score < 0) {
+        return res.status(400).json({ message: 'score must be a non negative number' });
+    }
     try {
         // Find user or create if doesn't exist
         let user = await User.findOne({ spotifyId });

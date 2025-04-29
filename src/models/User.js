@@ -21,8 +21,8 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-});
-//
+}, { timestamps: true }); // added timestamps option for automatic createdAt and updatedAt fields
+
 
 // create/retrieve the user model and if it doesnt exist create a new one
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
