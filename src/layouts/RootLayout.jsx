@@ -20,11 +20,13 @@ function RootLayout() {
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
     }
+
     //logout state
     const handleLogout = (e) => {
         e.preventDefault();
         //close dropdown then logout
         setShowDropdown(false);
+        //logging out using context function.
         logout();
     }
 
