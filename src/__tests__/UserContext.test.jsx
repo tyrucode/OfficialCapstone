@@ -116,7 +116,7 @@ describe('UserContext', () => {
         await waitFor(() => {
             expect(screen.getByTestId('username')).toHaveTextContent('Test User');
         });
-        //a
+        //fixing
         // clicking logout  button
         screen.getByText('Logout').click();
 
