@@ -9,7 +9,7 @@ const REDIRECT_URI = 'https://official-capstone.vercel.app/callback'
 console.log("using redirect uri:", REDIRECT_URI);
 
 
-// permissions we are wanting from the users spotify account
+// permissions that we are wanting from the users spotify account
 const SCOPES = [
     'user-read-private',
     'user-read-email',
