@@ -26,14 +26,15 @@ function SpotifyCallback() {
         //actual callback
         const handleCallback = async () => {
             try {
-                //get token info from the hash
+                //get token info from the hash in the url
                 const hash = window.location.hash
-                    //crop it at the first index
+                    //get rid of the hashtag at the first index
                     .substring(1)
-                    //split at the symbol
+                    //split at the & symbol
                     .split('&')
-                    //reduce to what we need
+                    //reduce into objects for what we need
                     .reduce((initial, item) => {
+                        //making our object key values be - item : decodedKey, and return that value
                         if (item) {
                             const parts = item.split('=');
                             initial[parts[0]] = decodeURIComponent(parts[1]);

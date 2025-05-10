@@ -15,7 +15,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(',')
     : ['http://localhost:5173', 'https://official-capstone.vercel.app'];
 
-// Middleware
+// middleware
 app.use(cors({
     origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // explicitly allow HTTP methods
