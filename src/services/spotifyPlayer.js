@@ -113,7 +113,7 @@ export class SpotifyPlayer {
             const token = localStorage.getItem('spotify_access_token');
 
             // play random part of the song based on above
-            await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`, {
+            const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${this.deviceId}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -125,23 +125,27 @@ export class SpotifyPlayer {
                     position_ms: this.snippetStartTime
                 })
             });
+
             // handle API errors - especially 404 errors
             if (!response.ok) {
                 if (response.status === 404) {
-                    throw new Error('Failed to play track: ${response.status} - spotify-404');
+                    throw new Error(`Failed to play track: ${response.status} - spotify-404`);
                 }
+                throw new Error(`Failed to play track: ${response.status}`);
             }
 
             // store the current track we are going to use
             this.currentTrackId = trackUri;
+
             // after the snippet is done pause the song
             this.playbackTimer = setTimeout(() => {
                 this.pausePlayback();
             }, this.snippetDuration);
+
             return true;
-            //error handling
         } catch (error) {
-            throw new Error('error playing the track snippet:', error);
+            console.error('Error playing the track snippet:', error);
+            throw error;
         }
     }
     // pause song 
