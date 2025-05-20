@@ -22,6 +22,7 @@ function Game() {
             // Redirect to home page if not authenticated
             navigate('/');
         }
+        //navigate to avoid react warnings
     }, [navigate]);
 
     return (
