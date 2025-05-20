@@ -6,10 +6,17 @@ import './App.css'
 
 import App from './App'
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </StrictMode>,
-)
+// Make sure the DOM is loaded before trying to access 'root'
+const root = document.getElementById('root');
+
+if (root) {
+  createRoot(root).render(
+    <StrictMode>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </StrictMode>,
+  );
+} else {
+  console.error("Root element not found - check your index.html");
+}
