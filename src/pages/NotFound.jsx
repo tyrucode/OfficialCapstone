@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-import { useNavigate } from 'react-router';
+import { useNavigate } from "react-router-dom";
+
 
 const NotFound = () => {
     // state for the not found page

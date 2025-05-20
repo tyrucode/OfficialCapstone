@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import PlaylistGrid from "../components/PlaylistGrid"
 
 function Game() {

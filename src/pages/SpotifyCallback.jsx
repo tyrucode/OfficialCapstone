@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { getUserProfile } from '../services/spotifyApi';
 import { useUser } from '../context/UserContext';
 

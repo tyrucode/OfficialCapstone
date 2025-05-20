@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-// import { useNavigate, useLocation } from 'react-router-dom';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { spotifyPlayer } from '../services/spotifyPlayer';
 import { useUser } from '../context/UserContext'; //context
 
