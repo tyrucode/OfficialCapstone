@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import { getUserProfile } from '../services/spotifyApi';
-import { useNavigate } from 'react-router-dom';
 
 const UserContext = createContext(null); //context for the users data
 

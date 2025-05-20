@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { UserProvider } from './context/UserContext';
+import { UserProvider } from './src/context/UserContext';
 
 // Import your layouts
 import RootLayout from './layouts/RootLayout';
