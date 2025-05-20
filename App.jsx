@@ -2,15 +2,15 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserProvider } from './src/context/UserContext';
 
 // Import your layouts
-import RootLayout from './layouts/RootLayout';
+import RootLayout from './src/layouts/RootLayout'
 
 // Import your pages
-import Home from './pages/Home';
-import PlaylistDisplay from './pages/PlaylistDisplay';
-import GameTimePage from './pages/GameTimePage';
-import SpotifyCallback from './pages/SpotifyCallback';
-import Leaderboard from './pages/Leaderboard';
-import NotFound from './pages/NotFound';
+import Home from './src/pages/Home'
+import PlaylistDisplay from './src/pages/PlaylistDisplay';
+import GameTimePage from './src/pages/GameTimePage';
+import SpotifyCallback from './src/pages/SpotifyCallback';
+import Leaderboard from './src/pages/Leaderboard';
+import NotFound from './src/pages/NotFound';
 
 function App() {
   return (
