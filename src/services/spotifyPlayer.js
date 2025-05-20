@@ -58,6 +58,9 @@ export class SpotifyPlayer {
             getOAuthToken: (cb) => { cb(token); }, //function that provides auth token for the player
             volume: 0.7 //default audio level
         });
+
+        //A LOT OF ERROR HANDLING 
+        //fun
         // initialization error
         this.player.addListener('initialization_error', ({ message }) => {
             console.error('error for initialization:', message);
