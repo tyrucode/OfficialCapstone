@@ -102,7 +102,7 @@ function RootLayout() {
                 <Outlet />
             </main>
             <footer>
-                <p>Note: This app <strong>isnt</strong> an official Spotify App. Contact me for any questions. Links: <a href="https://github.com/tyrucode">Github</a> <a href="https://www.linkedin.com/in/tyler-ruiz-84a287305/">Linkedin</a></p>
+                <p>Note: This app <strong>isnt</strong> an official Spotify App. Contact me for any questions. Links: <a target="_blank" href="https://github.com/tyrucode">Github</a> <a target="_blank" href="https://www.linkedin.com/in/tyler-ruiz-84a287305/">Linkedin</a></p>
             </footer>
         </div >
     )
