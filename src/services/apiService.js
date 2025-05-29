@@ -7,7 +7,7 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
 export const saveUserScore = async (userData) => {
     try {
         //sending score to the db and convert it to a json string
-        const response = await fetch(`${API_URL}/users/update-score`, {
+        const response = await fetch(`${API_BASE_URL}/users/update-score`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export const saveUserScore = async (userData) => {
 // get leaderboard data
 export const getLeaderboard = async () => {
     try {
-        const response = await fetch(`${API_URL}/users/leaderboard`); //get request for the leaderboard
+        const response = await fetch(`${API_BASE_URL}/users/leaderboard`); //get request for the leaderboard
         //check if response was good if not then error handle
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
