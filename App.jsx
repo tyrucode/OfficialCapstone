@@ -1,5 +1,4 @@
 import { RouterProvider, Route, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
-import { Analytics } from "@vercel/analytics/react"
 // pages
 import Home from "./src/pages/Home"
 import PlaylistDisplay from "./src/pages/PlaylistDisplay"
