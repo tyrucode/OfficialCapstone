@@ -23,38 +23,69 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
+
 app.use(express.json());
 
-const connectDB = async (retryCount = 5, delay = 5000) => {
+// MongoDB connection with better error handling
+const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI, {
-            dbName: process.env.DB_NAME
-        });
-        console.log('MongoDB connected');
+        if (mongoose.connection.readyState === 0) {
+            await mongoose.connect(process.env.MONGODB_URI, {
+                dbName: process.env.DB_NAME
+            });
+            console.log('MongoDB connected');
+        }
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
-        console.log(`Retrying connection in ${delay / 1000} seconds...`);
-        setTimeout(() => connectDB(retryCount - 1, delay), delay);
+        // Don't retry in production, just log the error
+        if (process.env.NODE_ENV !== 'production') {
+            setTimeout(connectDB, 5000);
+        }
     }
 };
 
+// Connect to DB
 connectDB();
 
+// API routes
 app.use('/api/users', userRoutes);
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// Handle production static files
 if (process.env.NODE_ENV === 'production') {
     const buildPath = path.resolve(__dirname, '../../dist');
     app.use(express.static(buildPath));
 
+    // Handle client-side routing
     app.get('*', (req, res) => {
+        // Don't serve index.html for API routes
+        if (req.path.startsWith('/api/')) {
+            return res.status(404).json({ error: 'API endpoint not found' });
+        }
         res.sendFile(path.join(buildPath, 'index.html'));
     });
 } else {
     app.get('/', (req, res) => {
-        res.send('Guessify API is running');
+        res.json({ message: 'Guessify API is running' });
     });
 }
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Server error:', err);
+    res.status(500).json({ error: 'Internal server error' });
 });
+
+// Export for Vercel
+export default app;
+
+// Start server in development
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
