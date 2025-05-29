@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
 
+@import "tailwindcss";
+@plugin "daisyui";
+
 
 body {
   margin: 0;
@@ -112,19 +115,15 @@ h1 {
 
 /* FOOTER */
 footer {
-  position: fixed;
+  position: fixed; 
   left: 0;
   bottom: 0;
   width: 100%;
-  background-color: #535353;
-  color: #212121;
+ 
   text-align: center;
 }
 
-footer a {
-  text-decoration: none;
-  color: black;
-}
+
 
 /* PROFILE ONCE USER IS LOGGED IN */
 .user-profile {

@@ -7,6 +7,7 @@ import { NavLink, Outlet } from "react-router-dom"
 import { redirectToSpotifyLogin } from "../services/spotifyAuth";
 import { useUser } from "../context/UserContext";
 import { useState } from "react";
+import NewFooter from '../components/NewFooter';
 
 function RootLayout() {
     const { user, logout } = useUser(); //get user data from the context
@@ -101,9 +102,7 @@ function RootLayout() {
                 <h3>Inspired by Wordle</h3>
                 <Outlet />
             </main>
-            <footer>
-                <p>Note: This app <strong>isnt</strong> an official Spotify App. Contact me for any questions. Links: <a target="_blank" href="https://github.com/tyrucode">Github</a> <a target="_blank" href="https://www.linkedin.com/in/tyler-ruiz-84a287305/">Linkedin</a></p>
-            </footer>
+            <NewFooter />
         </div >
     )
 }
