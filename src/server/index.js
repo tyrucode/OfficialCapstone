@@ -26,29 +26,55 @@ app.use(cors({
 
 app.use(express.json());
 
-// MongoDB connection with better error handling
+// MongoDB connection optimized for serverless
+let cached = global.mongoose;
+
+if (!cached) {
+    cached = global.mongoose = { conn: null, promise: null };
+}
+
 const connectDB = async () => {
+    if (cached.conn) {
+        return cached.conn;
+    }
+
+    if (!cached.promise) {
+        const opts = {
+            bufferCommands: false,
+            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
+            family: 4
+        };
+
+        if (process.env.DB_NAME) {
+            opts.dbName = process.env.DB_NAME;
+        }
+
+        cached.promise = mongoose.connect(process.env.MONGODB_URI, opts);
+    }
+
     try {
-        if (mongoose.connection.readyState === 0) {
-            await mongoose.connect(process.env.MONGODB_URI, {
-                dbName: process.env.DB_NAME
-            });
-            console.log('MongoDB connected');
-        }
+        cached.conn = await cached.promise;
+        console.log('MongoDB connected');
+        return cached.conn;
     } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
-        // Don't retry in production, just log the error
-        if (process.env.NODE_ENV !== 'production') {
-            setTimeout(connectDB, 5000);
-        }
+        cached.promise = null;
+        console.error('MongoDB connection error:', error);
+        throw error;
     }
 };
 
-// Connect to DB
-connectDB();
-
-// API routes
-app.use('/api/users', userRoutes);
+// API routes - ensure DB connection before handling requests
+app.use('/api/users', async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error('Database connection failed:', error);
+        res.status(500).json({ error: 'Database connection failed' });
+    }
+}, userRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
