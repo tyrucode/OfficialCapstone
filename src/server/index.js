@@ -86,12 +86,8 @@ if (process.env.NODE_ENV === 'production') {
     const buildPath = path.resolve(__dirname, '../../dist');
     app.use(express.static(buildPath));
 
-    // Handle client-side routing
-    app.get('*', (req, res) => {
-        // Don't serve index.html for API routes
-        if (req.path.startsWith('/api/')) {
-            return res.status(404).json({ error: 'API endpoint not found' });
-        }
+    // Handle client-side routing - FIXED: Use regex pattern instead of *
+    app.get(/^(?!\/api\/).*/, (req, res) => {
         res.sendFile(path.join(buildPath, 'index.html'));
     });
 } else {
