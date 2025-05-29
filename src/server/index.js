@@ -2,28 +2,29 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import userRoutes from './routes/userRoutes.js';
 
-// load environment variables
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// get origins from enviornmental variables or allow the hard coded links.
 const allowedOrigins = process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(',')
     : ['http://localhost:5173', 'https://official-capstone.vercel.app'];
 
-// middleware
 app.use(cors({
     origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // explicitly allow HTTP methods
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }));
 app.use(express.json());
-// Connect to MongoDB
-// added retryCount / delay so we can attempt to rejoin if it doesnt connect the first time.
+
 const connectDB = async (retryCount = 5, delay = 5000) => {
     try {
         await mongoose.connect(process.env.MONGODB_URI, {
@@ -31,7 +32,6 @@ const connectDB = async (retryCount = 5, delay = 5000) => {
         });
         console.log('MongoDB connected');
     } catch (error) {
-        // retrying connection in 5 seconds
         console.error('Error connecting to MongoDB:', error);
         console.log(`Retrying connection in ${delay / 1000} seconds...`);
         setTimeout(() => connectDB(retryCount - 1, delay), delay);
@@ -40,15 +40,21 @@ const connectDB = async (retryCount = 5, delay = 5000) => {
 
 connectDB();
 
-// routes
 app.use('/api/users', userRoutes);
 
-// default route
-app.get('/', (req, res) => {
-    res.send('Guessify API is running');
-});
+if (process.env.NODE_ENV === 'production') {
+    const buildPath = path.resolve(__dirname, '../../dist');
+    app.use(express.static(buildPath));
 
-// start server
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(buildPath, 'index.html'));
+    });
+} else {
+    app.get('/', (req, res) => {
+        res.send('Guessify API is running');
+    });
+}
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
