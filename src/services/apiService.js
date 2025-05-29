@@ -1,7 +1,7 @@
 // change api depending on enviornment for error handling
-const API_URL = import.meta.env.MODE === 'development'
-    ? 'http://localhost:5000/api'
-    : 'https://official-capstone.vercel.app/api';// production
+const API_BASE_URL = process.env.NODE_ENV === 'production'
+    ? 'https://official-capstone.vercel.app/'  // Replace with your actual Vercel URL
+    : 'http://localhost:5000/api';
 
 // save user score to db
 export const saveUserScore = async (userData) => {
