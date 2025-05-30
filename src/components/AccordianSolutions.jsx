@@ -32,7 +32,7 @@ const AccordionSolutions = () => {
     );
 };
 
-const Solution = ({ title, description, index, open, setOpen }) => {
+const Solution = ({ title, description, index, open, setOpen, learnMoreLink }) => {
     const isOpen = index === open;
 
     return (
@@ -67,16 +67,21 @@ const Solution = ({ title, description, index, open, setOpen }) => {
                         {description}
                     </motion.p>
                 </div>
-                <motion.button
-                    initial={false}
-                    animate={{
-                        opacity: isOpen ? 1 : 0,
-                    }}
-                    className="-ml-6 -mr-6 -mb-6 mt-4 py-2 rounded-b-md flex items-center justify-center gap-1 group transition-[gap] bg-gradient-to-r from-green-500 to-emerald-600 text-white"
-                >
-                    <span>Learn more</span>
-                    <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-                </motion.button>
+                {learnMoreLink && (
+                    <motion.a
+                        href={learnMoreLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        initial={false}
+                        animate={{
+                            opacity: isOpen ? 1 : 0,
+                        }}
+                        className="-ml-6 -mr-6 -mb-6 mt-4 py-2 rounded-b-md flex items-center justify-center gap-1 group transition-[gap] bg-gradient-to-r from-green-500 to-emerald-600 text-white"
+                    >
+                        <span>Learn more</span>
+                        <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+                    </motion.a>
+                )}
             </motion.div>
             <motion.div
                 initial={false}
@@ -90,6 +95,7 @@ const Solution = ({ title, description, index, open, setOpen }) => {
     );
 };
 
+
 export default AccordionSolutions;
 
 const solutions = [
@@ -100,6 +106,7 @@ const solutions = [
             "Due to Spotify API limitations, you will need to provide your Spotify email so I can sign you up to play this game. You can send it to me by clicking the 'Learn More' button and sending me a message on LinkedIn!",
         imgSrc:
             "https://media.giphy.com/media/tOi4zkAikroTOBV9oy/giphy.gif?cid=ecf05e47x09kmr9aynozgsldr30qlareqd0rgxzupkjc4dzi&ep=v1_gifs_search&rid=giphy.gif&ct=g",
+        learnMoreLink: "https://www.linkedin.com/in/tyler-ruiz-84a287305/",
     },
     {
         id: 2,
@@ -108,6 +115,7 @@ const solutions = [
             "To play, first sign into your Spotify account. Then, choose a playlist from your library. You will have three guesses to guess the song based on a snippet of the song. If you guess the song correctly, you win and go on the leaderboard! If not, you can try again with another playlist.",
         imgSrc:
             "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNW41cGJ4dWo2MThqM2owaXpsNTVkcmRoNHY2YTdreDZzMW5kYXJrcSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gQJyPqc6E4xoc/giphy.gif",
+
     },
     {
         id: 3,
@@ -116,5 +124,6 @@ const solutions = [
             "Dont feel like signing up? No problem! You can watch a demo video of the game by clicking the 'Learn More' button below. It will take you to a YouTube video that shows how the game works.",
         imgSrc:
             "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExemlqa2FtNm9sbnF6NmNoMTc3MHMzODFibnVscTN3NGVyMG4xZ2YybiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/1kkxWqT5nvLXupUTwK/giphy.gif",
+        learnMoreLink: "https://youtu.be/2GEESgQlijA",
     },
 ];
