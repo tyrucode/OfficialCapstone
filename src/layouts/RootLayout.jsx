@@ -9,6 +9,7 @@ import { useUser } from "../context/UserContext";
 import { useState } from "react";
 import NewFooter from '../components/NewFooter';
 
+
 function RootLayout() {
     const { user, logout } = useUser(); //get user data from the context
     const [showDropdown, setShowDropdown] = useState(false); //dropdown state
