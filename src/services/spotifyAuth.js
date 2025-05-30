@@ -4,7 +4,8 @@ const CLIENT_ID = '619cbfa18fd846088bc95b31a67816b2';
 // development url
 // const REDIRECT_URI = 'http://localhost:5173/callback'
 // production url
-const REDIRECT_URI = 'https://official-capstone.vercel.app/callback'
+const REDIRECT_URI = window.location.origin + '/callback';
+
 // checking what uri ur using
 console.log("using redirect uri:", REDIRECT_URI);
 
