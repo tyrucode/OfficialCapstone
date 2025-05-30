@@ -1,10 +1,10 @@
 // spotify dev client id
 const CLIENT_ID = '619cbfa18fd846088bc95b31a67816b2';
 
-// development url
-const REDIRECT_URI = 'http://localhost:5173/callback'
-// production url
-const REDIRECT_URI = window.location.origin + '/callback';
+// Determine redirect URI based on environment
+const REDIRECT_URI = process.env.NODE_ENV === 'production'
+    ? 'https://official-capstone.vercel.app/callback'  // Your production URL
+    : 'http://localhost:5173/callback';  // Development URL
 
 // checking what uri ur using
 console.log("using redirect uri:", REDIRECT_URI);
