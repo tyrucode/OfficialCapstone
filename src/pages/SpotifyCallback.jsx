@@ -16,7 +16,10 @@ function SpotifyCallback() {
     });
 
     useEffect(() => {
-        //error handling state
+    console.log('SpotifyCallback mounted');
+    console.log('Current URL:', window.location.href);
+    console.log('Hash:', window.location.hash);
+         //error handling state
         setDebugInfo({
             url: window.location.href,
             hash: window.location.hash,
