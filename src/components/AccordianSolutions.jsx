@@ -6,9 +6,9 @@ const AccordionSolutions = () => {
     const [open, setOpen] = useState(solutions[0].id);
     const imgSrc = solutions.find((s) => s.id === open)?.imgSrc;
     return (
-        <section className="px-8 py-12  text-white">
+        <section className="px-4 py-8 sm:px-6 sm:py-12 text-white max-h-screen  overflow-y-auto ">
             <div className="w-full max-w-6xl mx-auto grid gap-8 grid-cols-1 lg:grid-cols-[1fr_350px]">
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 overflow-y-auto overscroll-auto ">
                     {solutions.map((q) => (
                         <Solution {...q} key={q.id} open={open} setOpen={setOpen} index={q.id} />
                     ))}
@@ -19,7 +19,7 @@ const AccordionSolutions = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         key={imgSrc}
-                        className="bg-zinc-700 rounded-2xl aspect-[4/3] lg:aspect-auto"
+                        className="bg-zinc-700 rounded-2xl aspect-[4/3] lg:aspect-auto "
                         style={{
                             backgroundImage: `url(${imgSrc})`,
                             backgroundPosition: "center",
@@ -45,7 +45,7 @@ const Solution = ({ title, description, index, open, setOpen, learnMoreLink }) =
                 animate={{
                     height: isOpen ? "240px" : "72px",
                 }}
-                className="p-6 rounded-[7px] bg-zinc-800 flex flex-col justify-between relative z-20"
+                className="p-6 rounded-[7px] bg-zinc-800 flex flex-col justify-between relative z-20 overflow-y-auto sm:overflow-visible"
             >
                 <div>
                     <motion.p
@@ -53,7 +53,7 @@ const Solution = ({ title, description, index, open, setOpen, learnMoreLink }) =
                         animate={{
                             color: isOpen ? "rgba(255, 255, 255, 0)" : "rgba(255, 255, 255, 1)",
                         }}
-                        className="text-xl font-medium w-fit bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent"
+                        className="text-xl font-medium w-fit bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent "
                     >
                         {title}
                     </motion.p>
@@ -62,7 +62,7 @@ const Solution = ({ title, description, index, open, setOpen, learnMoreLink }) =
                         animate={{
                             opacity: isOpen ? 1 : 0,
                         }}
-                        className="mt-4 bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent"
+                        className="mt-4 bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent  "
                     >
                         {description}
                     </motion.p>

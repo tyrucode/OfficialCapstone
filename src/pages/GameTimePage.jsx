@@ -303,7 +303,7 @@ function GameTimePage() {
                 )}
                 <div className="playlist-details">
                     <div className='titleScore'>
-                        <h2>{playlistName}<h2 id='userScore'>{score}</h2></h2>
+                        <h2>{playlistName}<h2 id='userScore'>Score : {score}</h2></h2>
                     </div>
                     {/* if game is active show controls */}
                     {currentTrack && gameStatus === 'playing' && playerReady && (
