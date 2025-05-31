@@ -34,7 +34,7 @@ function NewHeader() {
 
             <header class="bg-transparent">
                 <nav class="flex gap-4 justify-end max-w-screen-xl mx-auto items-center px-4 py-2">
-                    <h1 class="mr-auto text-[150%] mb-0 border-b-[3px] border-[#1db954] shadow-[10px_10px_5px_rgba(0,0,0,0.75)]">
+                    <h1 class=" hover:scale-105 transition-all duration-200 ease-in-out transform mr-auto text-[175%] mb-0 border-b-[3px] border-[#1db954] shadow-[10px_10px_5px_rgba(0,0,0,0.75)]">
                         Guessify!
                     </h1>
                     <a
@@ -52,7 +52,7 @@ function NewHeader() {
                     {!user ? (
                         <a href="#" class="text-white no-underline px-2 py-1 rounded-[25%] border-2 border-[#1db954] text-[175%] shadow-[10px_10px_5px_rgba(0,0,0,0.75)] hover:text-[#1db954] hover:scale-105 transition-all duration-200 ease-in-out transform" onClick={handleSpotifyLogin}>Sign In!<LockSharpIcon /></a>
                     ) : (
-                        <div style={{ position: 'relative' }}>
+                        <div style={{ position: 'relative' }} class='hover:scale-105  transition-all duration-200 ease-in-out transform'>
                             <div
                                 onClick={toggleDropdown}
                                 style={{
@@ -67,16 +67,17 @@ function NewHeader() {
                                         src={user.images[0].url}
                                         alt={user.display_name}
                                         style={{
-                                            width: '45px',
-                                            height: '45px',
+                                            width: '55px',
+                                            height: '55px',
                                             borderRadius: '50%',
                                             border: '2px solid #1db954'
                                         }}
+
                                     />
                                 ) : (
                                     <PersonIcon style={{ color: '#1db954' }} />
                                 )}
-                                <span>{user.display_name}</span>
+                                <span class='text-[115%]'>{user.display_name}</span>
                             </div>
 
                             {showDropdown && (
@@ -88,16 +89,9 @@ function NewHeader() {
                                     padding: '8px',
                                     zIndex: 100,
                                 }}>
-                                    <a
+                                    <a class=" no-underline px-2 py-1 rounded-[25%] border-2 border-red text-[110%] shadow-[10px_10px_5px_rgba(0,0,0,0.75)] hover:text-[#1db954] hover:scale-105 transition-all duration-200 ease-in-out transform"
                                         href="#"
                                         onClick={handleLogout}
-                                        style={{
-                                            display: 'block',
-                                            padding: '8px 16px',
-                                            textDecoration: 'none',
-                                            color: 'white',
-                                            border: '2 border-[#1db954]'
-                                        }}
                                     >
                                         Sign Out
                                     </a>
