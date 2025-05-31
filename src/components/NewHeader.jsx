@@ -37,7 +37,7 @@ function NewHeader() {
 
                     <div className="navbar-center lg:navbar-start">
                         <h1 className="hover:scale-105 transition-all duration-200 ease-in-out transform text-[175%] border-b-[3px] border-[#1db954] shadow-[10px_10px_5px_rgba(0,0,0,0.75)] mr-4">
-                            Guessify!
+                            <NavLink to="/">Guessify!</NavLink>
                         </h1>
                     </div>
                     <div className="navbar-start lg:hidden justify-end">
